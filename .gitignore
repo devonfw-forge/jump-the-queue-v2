@@ -18,7 +18,7 @@ java/samples/server/eclipse-target/
 **/src/generated/
 **/tmp/
 
-java/mtsj/logs/
+CobiGen_Templates/
 
 # Package Files #
 *.jar
