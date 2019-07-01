@@ -12,6 +12,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.devonfw.application.jtqj.general.common.impl.Status;
 import com.devonfw.application.jtqj.queuemanagement.dataaccess.api.QueueEntity;
 
@@ -24,8 +26,9 @@ public class AccessCodeEntity {
 
 	private String uuid;
 
+	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp created;
+	private Timestamp createdDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Timestamp startTime;
@@ -68,15 +71,15 @@ public class AccessCodeEntity {
 	/**
 	 * @return the created
 	 */
-	public Timestamp getCreated() {
-		return created;
+	public Timestamp getCreatedDate() {
+		return createdDate;
 	}
 
 	/**
 	 * @param created the created to set
 	 */
-	public void setCreated(Timestamp created) {
-		this.created = created;
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	/**

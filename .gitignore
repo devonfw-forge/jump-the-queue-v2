@@ -19,6 +19,7 @@ java/samples/server/eclipse-target/
 **/tmp/
 
 CobiGen_Templates/
+.recommenders/
 
 # Package Files #
 *.jar
