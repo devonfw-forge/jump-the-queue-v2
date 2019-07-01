@@ -19,7 +19,10 @@ java/samples/server/eclipse-target/
 **/tmp/
 
 CobiGen_Templates/
+RemoteSystemsTempFiles/
 .recommenders/
+.metadata/
+.sonarlint
 
 # Package Files #
 *.jar
