@@ -1,0 +1,1 @@
+INSERT INTO Owner(id, modificationCounter, username, password, userType) VALUES (0, 1, 'adcenter', 'adcenter', '1');
