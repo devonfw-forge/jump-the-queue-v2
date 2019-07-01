@@ -3,15 +3,20 @@ package com.devonfw.application.jtqj.ownermanagement.dataaccess.api;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
+import com.devonfw.application.jtqj.ownermanagement.common.api.Owner;
+
 @Entity
 @Table(name = "Owner")
-public class OwnerEntity {
+public class OwnerEntity extends ApplicationPersistenceEntity implements Owner {
 
 	private String username;
 
 	private String password;
 
 	private Boolean userType;
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @return the username

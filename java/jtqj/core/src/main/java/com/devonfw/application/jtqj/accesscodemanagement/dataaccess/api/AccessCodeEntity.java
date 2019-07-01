@@ -10,16 +10,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.devonfw.application.jtqj.general.common.impl.Status;
+import com.devonfw.application.jtqj.accesscodemanagement.common.api.AccessCode;
+import com.devonfw.application.jtqj.general.common.api.Status;
+import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
 import com.devonfw.application.jtqj.queuemanagement.dataaccess.api.QueueEntity;
 
 @Entity
 @Table(name = "AccessCode")
-public class AccessCodeEntity {
+public class AccessCodeEntity extends ApplicationPersistenceEntity implements AccessCode {
 
 	@Size(min = 4, max = 4)
 	private String code;
@@ -39,6 +42,8 @@ public class AccessCodeEntity {
 	private Status status;
 
 	private QueueEntity queue;
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @return the code
@@ -138,6 +143,28 @@ public class AccessCodeEntity {
 	 */
 	public void setQueue(QueueEntity queue) {
 		this.queue = queue;
+	}
+
+	@Override
+	@Transient
+	public Long getQueueId() {
+
+		if (this.queue == null) {
+			return null;
+		}
+		return this.queue.getId();
+	}
+
+	@Override
+	public void setQueueId(Long queueId) {
+
+		if (queueId == null) {
+			this.queue = null;
+		} else {
+			QueueEntity queueEntity = new QueueEntity();
+			queueEntity.setId(queueId);
+			this.queue = queueEntity;
+		}
 	}
 
 }

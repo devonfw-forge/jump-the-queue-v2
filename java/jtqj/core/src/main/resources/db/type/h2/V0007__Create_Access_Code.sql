@@ -6,7 +6,7 @@ create table AccessCode(
   uuid VARCHAR(255) NOT NULL,
   startTime TIMESTAMP,
   endTime TIMESTAMP,
-  status VARCHAR(255) NOT NULL,
+  status INTEGER NOT NULL,
   idQueue BIGINT NOT NULL,
   CONSTRAINT PK_AccessCode PRIMARY KEY(id),
   CONSTRAINT FK_AccessCode_idQueue FOREIGN KEY(idQueue) REFERENCES Queue(id),

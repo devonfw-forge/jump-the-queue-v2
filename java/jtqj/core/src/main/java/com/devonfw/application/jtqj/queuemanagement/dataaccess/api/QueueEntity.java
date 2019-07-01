@@ -9,11 +9,12 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-
+import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
+import com.devonfw.application.jtqj.queuemanagement.common.api.Queue;
 
 @Entity
 @Table(name = "Queue")
-public class QueueEntity {
+public class QueueEntity extends ApplicationPersistenceEntity implements Queue {
 
 	private int minAttentionTime;
 
@@ -22,6 +23,8 @@ public class QueueEntity {
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Timestamp createdDate;
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @return the minAttentionTime
