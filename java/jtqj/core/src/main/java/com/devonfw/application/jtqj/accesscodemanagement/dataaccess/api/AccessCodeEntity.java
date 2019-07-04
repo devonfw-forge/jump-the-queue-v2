@@ -29,7 +29,6 @@ public class AccessCodeEntity extends ApplicationPersistenceEntity implements Ac
 
 	private String uuid;
 
-	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Timestamp createdDate;
 

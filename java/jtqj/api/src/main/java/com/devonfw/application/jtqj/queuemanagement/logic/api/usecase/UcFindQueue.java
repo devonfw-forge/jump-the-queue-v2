@@ -25,4 +25,10 @@ public interface UcFindQueue {
 	 */
 	Page<QueueEto> findQueues(QueueSearchCriteriaTo criteria);
 
+	/**
+	 * Returns the daily queue
+	 *
+	 * @return The {@link QueueEto} that match current day/month/year
+	 */
+	QueueEto findDailyQueue();
 }

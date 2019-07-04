@@ -34,6 +34,10 @@ public interface QueuemanagementRestService {
 	@Path("/queue/{id}/")
 	public QueueEto getQueue(@PathParam("id") long id);
 
+	@GET
+	@Path("/queue/daily/")
+	public QueueEto findDailyQueue();
+
 	/**
 	 * Delegates to {@link Queuemanagement#saveQueue}.
 	 *

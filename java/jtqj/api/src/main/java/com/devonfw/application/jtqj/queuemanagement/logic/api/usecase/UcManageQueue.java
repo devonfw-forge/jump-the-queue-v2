@@ -24,5 +24,4 @@ public interface UcManageQueue {
 	 * @return the new {@link QueueEto} that has been saved with ID and version.
 	 */
 	QueueEto saveQueue(QueueEto queue);
-
 }

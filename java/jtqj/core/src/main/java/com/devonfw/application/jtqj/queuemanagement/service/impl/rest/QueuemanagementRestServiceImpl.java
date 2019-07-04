@@ -39,4 +39,9 @@ public class QueuemanagementRestServiceImpl implements QueuemanagementRestServic
 	public Page<QueueEto> findQueues(QueueSearchCriteriaTo searchCriteriaTo) {
 		return this.queuemanagement.findQueues(searchCriteriaTo);
 	}
+
+	@Override
+	public QueueEto findDailyQueue() {
+		return this.queuemanagement.findDailyQueue();
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 
 public interface UcFindAccessCode {
@@ -26,4 +27,11 @@ public interface UcFindAccessCode {
 	 */
 	Page<AccessCodeCto> findAccessCodeCtos(AccessCodeSearchCriteriaTo criteria);
 
+	/**
+	 * Returns visitors code given by uuid
+	 *
+	 * @param uuid the uuid 'uuid' of the AccessCode.
+	 * @return The {@link AccessCodeEto} with such uuid 'uuid'
+	 */
+	AccessCodeEto findUuidAccessCode(String uuid);
 }

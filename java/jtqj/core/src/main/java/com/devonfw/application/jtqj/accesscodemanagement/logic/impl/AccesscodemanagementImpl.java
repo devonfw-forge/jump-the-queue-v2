@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.general.logic.base.AbstractComponentFacade;
@@ -31,4 +32,9 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 
 		return ucFindAccessCode.findAccessCodeCtos(criteria);
 	}
+
+	@Override
+	public AccessCodeEto findUuidAccessCode(String uuid) {
+		// TODO Auto-generated method stub
+		return new AccessCodeEto();	}
 }

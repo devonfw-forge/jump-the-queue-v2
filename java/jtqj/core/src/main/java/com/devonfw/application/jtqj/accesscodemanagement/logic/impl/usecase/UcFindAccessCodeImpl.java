@@ -46,7 +46,6 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 
 	@Override
 	public Page<AccessCodeCto> findAccessCodeCtos(AccessCodeSearchCriteriaTo criteria) {
-
 		Page<AccessCodeEntity> accesscodes = getAccessCodeRepository().findByCriteria(criteria);
 		List<AccessCodeCto> ctos = new ArrayList<>();
 		for (AccessCodeEntity entity : accesscodes.getContent()) {
@@ -59,5 +58,21 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 				criteria.getPageable().getPageSize());
 
 		return new PageImpl<>(ctos, pagResultTo, accesscodes.getTotalElements());
+	}
+
+	@Override
+	public AccessCodeEto findUuidAccessCode(String uuid) {
+		// Check if there is a code with such uuid
+		// 1. get today's queue
+		LOG.debug("Get AccessCodeCto with uuid {} from database.", uuid);
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setUuid(uuid);
+		// AccessCodeEntity entity = getAccessCodeRepository().findByCriteria(criteria);
+		// 1.1.2 create code
+		// 1.2 we have Queue
+		// 1.2.1 do we have code with such uuid and queue?
+		// 1.2.1.1 we don't have code
+		// 1.2.1.2 there is a code return it
+		return new AccessCodeEto();
 	}
 }

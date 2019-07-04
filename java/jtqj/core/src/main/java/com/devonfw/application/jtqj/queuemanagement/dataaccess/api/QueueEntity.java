@@ -20,7 +20,6 @@ public class QueueEntity extends ApplicationPersistenceEntity implements Queue {
 
 	private Boolean started;
 
-	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Timestamp createdDate;
 
