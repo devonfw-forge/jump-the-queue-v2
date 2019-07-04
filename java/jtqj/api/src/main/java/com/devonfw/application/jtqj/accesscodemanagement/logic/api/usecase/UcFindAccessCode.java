@@ -33,5 +33,5 @@ public interface UcFindAccessCode {
 	 * @param uuid the uuid 'uuid' of the AccessCode.
 	 * @return The {@link AccessCodeEto} with such uuid 'uuid'
 	 */
-	AccessCodeEto findUuidAccessCode(String uuid);
+	AccessCodeCto findUuidAccessCode(String uuid);
 }

@@ -1,8 +1,10 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.impl.usecase;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,6 +23,8 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
+import com.devonfw.application.jtqj.general.common.api.Status;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
 /**
@@ -30,6 +35,9 @@ import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 @Transactional
 public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFindAccessCode {
 
+	private static final String QUEUE_LETTER_CODE = "Q";
+	private static final String FIRST_CODE_IN_QUEUE = "Q001";
+	private static final String LAST_CODE_IN_QUEUE = "Q999";
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(UcFindAccessCodeImpl.class);
 
@@ -40,7 +48,6 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		AccessCodeCto cto = new AccessCodeCto();
 		cto.setAccessCode(getBeanMapper().map(entity, AccessCodeEto.class));
 		cto.setQueue(getBeanMapper().map(entity.getQueue(), QueueEto.class));
-
 		return cto;
 	}
 
@@ -60,19 +67,72 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		return new PageImpl<>(ctos, pagResultTo, accesscodes.getTotalElements());
 	}
 
+	@Inject
+	Queuemanagement queueManagement;
 	@Override
-	public AccessCodeEto findUuidAccessCode(String uuid) {
-		// Check if there is a code with such uuid
-		// 1. get today's queue
-		LOG.debug("Get AccessCodeCto with uuid {} from database.", uuid);
+	public AccessCodeCto findUuidAccessCode(String uuid) {
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		AccessCodeCto visitorCode = new AccessCodeCto();
+		// Get today's queue
+		QueueEto dailyQueue = queueManagement.findDailyQueue();
+		// Get code associated with uuid and today's queue
 		criteria.setUuid(uuid);
-		// AccessCodeEntity entity = getAccessCodeRepository().findByCriteria(criteria);
-		// 1.1.2 create code
-		// 1.2 we have Queue
-		// 1.2.1 do we have code with such uuid and queue?
-		// 1.2.1.1 we don't have code
-		// 1.2.1.2 there is a code return it
-		return new AccessCodeEto();
+		criteria.setQueueId(dailyQueue.getId());
+		Page<AccessCodeEntity> codes = getAccessCodeRepository().findByCriteria(criteria);
+		// create code if user hasn't for today
+		if (codes.getContent().isEmpty()) {
+			AccessCodeEto newCode = new AccessCodeEto();
+			newCode.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			newCode.setUuid(uuid);
+			newCode.setQueueId(dailyQueue.getId());
+			if (dailyQueue.getStarted()) {
+				newCode.setStatus(Status.WAITING);
+			} else {
+				newCode.setStatus(Status.NOTSTARTED);
+			}
+			visitorCode.setQueue(dailyQueue);
+			AccessCodeEto lastCodeInQueue = getLastCodeInQueue(dailyQueue.getId());
+			// is queue empty?
+			if(lastCodeInQueue.getCreatedDate() == null) {
+				newCode.setCode(FIRST_CODE_IN_QUEUE);
+			} else {
+				newCode.setCode(nextCodeString(lastCodeInQueue.getCode()));
+			}
+			AccessCodeEntity savedCode = getAccessCodeRepository().save(getBeanMapper().map(newCode, AccessCodeEntity.class));
+			visitorCode.setAccessCode(getBeanMapper().map(savedCode, AccessCodeEto.class));
+		} else {
+			visitorCode.setAccessCode(getBeanMapper().map(codes.getContent().get(0), AccessCodeEto.class));
+			visitorCode.setQueue(dailyQueue);
+		}
+		return visitorCode;
+	}
+
+	// Given a code, gives next
+	// Example: Input: Q009 Output: Q010
+	private String nextCodeString(String codeString) {
+		String nextCode = FIRST_CODE_IN_QUEUE;
+		if (!codeString.equals(LAST_CODE_IN_QUEUE)) {
+			String numbers = codeString.substring(1);
+			int number = Integer.parseInt(numbers);
+			number = number + 1;
+			numbers = String.valueOf(number);
+			while (numbers.length() < 3) {
+				numbers = "0" + numbers;
+			}
+			nextCode = QUEUE_LETTER_CODE + numbers;
+		}
+		return nextCode;
+	}
+
+	private AccessCodeEto getLastCodeInQueue(long queueId) {
+		AccessCodeEto lastCode = new AccessCodeEto();
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(queueId);
+		criteria.setPageable(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC,"createdDate")));
+		Page<AccessCodeEntity> accessCodes = getAccessCodeRepository().findByCriteria(criteria);
+		if (accessCodes.getContent().size() == 1) {
+			lastCode = getBeanMapper().map(accessCodes.getContent().get(0), AccessCodeEto.class);
+		}
+		return lastCode;
 	}
 }

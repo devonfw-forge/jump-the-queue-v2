@@ -34,7 +34,7 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	}
 
 	@Override
-	public AccessCodeEto findUuidAccessCode(String uuid) {
-		// TODO Auto-generated method stub
-		return new AccessCodeEto();	}
+	public AccessCodeCto findUuidAccessCode(String uuid) {
+		return ucFindAccessCode.findUuidAccessCode(uuid);
+	}
 }

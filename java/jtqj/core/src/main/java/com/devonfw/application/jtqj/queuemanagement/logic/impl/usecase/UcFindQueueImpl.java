@@ -52,8 +52,6 @@ public class UcFindQueueImpl extends AbstractQueueUc implements UcFindQueue {
 
 	@Inject
 	Queuemanagement queuemanagement;
-
-
 	@Override
 	public QueueEto findDailyQueue() {
 		// Return today's queue (create if not exists)
