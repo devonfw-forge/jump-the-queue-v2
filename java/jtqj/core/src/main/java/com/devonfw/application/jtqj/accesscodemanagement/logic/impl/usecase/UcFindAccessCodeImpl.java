@@ -28,7 +28,6 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.Abst
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Use case implementation for searching, filtering and getting AccessCodes
