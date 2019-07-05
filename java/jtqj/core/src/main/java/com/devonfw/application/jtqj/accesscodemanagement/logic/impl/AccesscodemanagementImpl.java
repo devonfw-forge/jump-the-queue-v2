@@ -10,6 +10,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.general.logic.base.AbstractComponentFacade;
 
 /**
@@ -20,6 +21,9 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 
 	@Inject
 	private UcFindAccessCode ucFindAccessCode;
+
+	@Inject
+	private UcManageAccessCode ucManageAccessCode;
 
 	@Override
 	public AccessCodeCto findAccessCodeCto(long id) {
@@ -37,4 +41,28 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	public AccessCodeCto findUuidAccessCode(String uuid) {
 		return ucFindAccessCode.findUuidAccessCode(uuid);
 	}
+
+	@Override
+	public AccessCodeEto saveAccessCode(AccessCodeEto accesscode) {
+
+		return this.ucManageAccessCode.saveAccessCode(accesscode);
+	}
+
+	@Override
+	public boolean deleteAccessCode(long id) {
+
+		return this.ucManageAccessCode.deleteAccessCode(id);
+	}
+
+	@Override
+	public AccessCodeEto findAccessCode(long id) {
+
+		return this.ucFindAccessCode.findAccessCode(id);
+	}
+
+	@Override
+	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo criteria) {
+		return this.ucFindAccessCode.findAccessCodes(criteria);
+	}
+
 }

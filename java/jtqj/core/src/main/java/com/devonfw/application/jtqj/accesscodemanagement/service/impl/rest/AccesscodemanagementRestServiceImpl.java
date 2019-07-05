@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.service.api.rest.AccesscodemanagementRestService;
 
@@ -29,4 +30,25 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	public Page<AccessCodeCto> findAccessCodeCtos(AccessCodeSearchCriteriaTo searchCriteriaTo) {
 		return this.accesscodemanagement.findAccessCodeCtos(searchCriteriaTo);
 	}
+
+	@Override
+	public AccessCodeEto getAccessCode(long id) {
+		return this.accesscodemanagement.findAccessCode(id);
+	}
+
+	@Override
+	public AccessCodeEto saveAccessCode(AccessCodeEto accesscode) {
+		return this.accesscodemanagement.saveAccessCode(accesscode);
+	}
+
+	@Override
+	public void deleteAccessCode(long id) {
+		this.accesscodemanagement.deleteAccessCode(id);
+	}
+
+	@Override
+	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo searchCriteriaTo) {
+		return this.accesscodemanagement.findAccessCodes(searchCriteriaTo);
+	}
+
 }

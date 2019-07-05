@@ -43,7 +43,9 @@ public class UcManageQueueImpl extends AbstractQueueUc implements UcManageQueue 
 		QueueEntity queueEntity = getBeanMapper().map(queue, QueueEntity.class);
 
 		// initialize, validate queueEntity here if necessary
-		queueEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		if (queueEntity.getCreatedDate() == null) {
+			queueEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
 
 		QueueEntity resultEntity = getQueueRepository().save(queueEntity);
 		LOG.debug("Queue with id '{}' has been created.", resultEntity.getId());

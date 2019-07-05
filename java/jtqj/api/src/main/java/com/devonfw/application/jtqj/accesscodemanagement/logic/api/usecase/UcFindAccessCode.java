@@ -34,4 +34,21 @@ public interface UcFindAccessCode {
 	 * @return The {@link AccessCodeEto} with such uuid 'uuid'
 	 */
 	AccessCodeCto findUuidAccessCode(String uuid);
+
+	/**
+	 * Returns a AccessCode by its id 'id'.
+	 *
+	 * @param id The id 'id' of the AccessCode.
+	 * @return The {@link AccessCodeEto} with id 'id'
+	 */
+	AccessCodeEto findAccessCode(long id);
+
+	/**
+	 * Returns a paginated list of AccessCodes matching the search criteria.
+	 *
+	 * @param criteria the {@link AccessCodeSearchCriteriaTo}.
+	 * @return the {@link List} of matching {@link AccessCodeEto}s.
+	 */
+	Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo criteria);
+
 }

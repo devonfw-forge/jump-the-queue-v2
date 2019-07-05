@@ -14,10 +14,15 @@ public class AccessCodeEto extends AbstractEto implements AccessCode {
 	private static final long serialVersionUID = 1L;
 
 	private String code;
+
 	private String uuid;
+
 	private Timestamp createdDate;
+
 	private Timestamp startTime;
+
 	private Timestamp endTime;
+
 	private Status status;
 
 	private Long queueId;
@@ -173,4 +178,5 @@ public class AccessCodeEto extends AbstractEto implements AccessCode {
 		}
 		return true;
 	}
+
 }

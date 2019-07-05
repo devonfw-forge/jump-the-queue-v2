@@ -3,6 +3,7 @@ package com.devonfw.application.jtqj.accesscodemanagement.logic.impl.usecase;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,10 +37,18 @@ import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFindAccessCode {
 
 	private static final String QUEUE_LETTER_CODE = "Q";
+
 	private static final String FIRST_CODE_IN_QUEUE = "001";
+
 	private static final String LAST_CODE_IN_QUEUE = "999";
-	/** Logger instance. */
+
+	/**
+	 * Logger instance.
+	 */
 	private static final Logger LOG = LoggerFactory.getLogger(UcFindAccessCodeImpl.class);
+
+	@Inject
+	Queuemanagement queueManagement;
 
 	@Override
 	public AccessCodeCto findAccessCodeCto(long id) {
@@ -67,8 +76,6 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		return new PageImpl<>(ctos, pagResultTo, accesscodes.getTotalElements());
 	}
 
-	@Inject
-	Queuemanagement queueManagement;
 	@Override
 	public AccessCodeCto findUuidAccessCode(String uuid) {
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
@@ -82,7 +89,6 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		// create code if user hasn't for today
 		if (codes.getContent().isEmpty()) {
 			AccessCodeEto newCode = new AccessCodeEto();
-			newCode.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			newCode.setUuid(uuid);
 			newCode.setQueueId(dailyQueue.getId());
 			if (dailyQueue.getStarted()) {
@@ -93,12 +99,13 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 			visitorCode.setQueue(dailyQueue);
 			AccessCodeEto lastCodeInQueue = getLastCodeInQueue(dailyQueue.getId());
 			// is queue empty?
-			if(lastCodeInQueue.getCreatedDate() == null) {
+			if (lastCodeInQueue.getCreatedDate() == null) {
 				newCode.setCode(QUEUE_LETTER_CODE + FIRST_CODE_IN_QUEUE);
 			} else {
 				newCode.setCode(nextCodeString(lastCodeInQueue.getCode()));
 			}
-			AccessCodeEntity savedCode = getAccessCodeRepository().save(getBeanMapper().map(newCode, AccessCodeEntity.class));
+			AccessCodeEntity savedCode = getAccessCodeRepository()
+					.save(getBeanMapper().map(newCode, AccessCodeEntity.class));
 			visitorCode.setAccessCode(getBeanMapper().map(savedCode, AccessCodeEto.class));
 		} else {
 			visitorCode.setAccessCode(getBeanMapper().map(codes.getContent().get(0), AccessCodeEto.class));
@@ -107,8 +114,6 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		return visitorCode;
 	}
 
-	// Given a code, gives next
-	// Example: Input: Q009 Output: Q010
 	private String nextCodeString(String codeString) {
 		String nextCode = QUEUE_LETTER_CODE + FIRST_CODE_IN_QUEUE;
 		if (!codeString.equals(QUEUE_LETTER_CODE + LAST_CODE_IN_QUEUE)) {
@@ -128,11 +133,28 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		AccessCodeEto lastCode = new AccessCodeEto();
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
 		criteria.setQueueId(queueId);
-		criteria.setPageable(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC,"createdDate")));
+		criteria.setPageable(PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "createdDate")));
 		Page<AccessCodeEntity> accessCodes = getAccessCodeRepository().findByCriteria(criteria);
 		if (accessCodes.getContent().size() == 1) {
 			lastCode = getBeanMapper().map(accessCodes.getContent().get(0), AccessCodeEto.class);
 		}
 		return lastCode;
 	}
+
+	@Override
+	public AccessCodeEto findAccessCode(long id) {
+		LOG.debug("Get AccessCode with id {} from database.", id);
+		Optional<AccessCodeEntity> foundEntity = getAccessCodeRepository().findById(id);
+		if (foundEntity.isPresent())
+			return getBeanMapper().map(foundEntity.get(), AccessCodeEto.class);
+		else
+			return null;
+	}
+
+	@Override
+	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo criteria) {
+		Page<AccessCodeEntity> accesscodes = getAccessCodeRepository().findByCriteria(criteria);
+		return mapPaginatedEntityList(accesscodes, AccessCodeEto.class);
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.devonfw.application.jtqj.accesscodemanagement.service.api.rest;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 
 /**
@@ -43,5 +45,45 @@ public interface AccesscodemanagementRestService {
 	@Path("/accesscode/cto/search")
 	@POST
 	public Page<AccessCodeCto> findAccessCodeCtos(AccessCodeSearchCriteriaTo searchCriteriaTo);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#findAccessCode}.
+	 *
+	 * @param id the ID of the {@link AccessCodeEto}
+	 * @return the {@link AccessCodeEto}
+	 */
+	@GET
+	@Path("/accesscode/{id}/")
+	public AccessCodeEto getAccessCode(@PathParam("id") long id);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#saveAccessCode}.
+	 *
+	 * @param accesscode the {@link AccessCodeEto} to be saved
+	 * @return the recently created {@link AccessCodeEto}
+	 */
+	@POST
+	@Path("/accesscode/")
+	public AccessCodeEto saveAccessCode(AccessCodeEto accesscode);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#deleteAccessCode}.
+	 *
+	 * @param id ID of the {@link AccessCodeEto} to be deleted
+	 */
+	@DELETE
+	@Path("/accesscode/{id}/")
+	public void deleteAccessCode(@PathParam("id") long id);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#findAccessCodeEtos}.
+	 *
+	 * @param searchCriteriaTo the pagination and search criteria to be used for
+	 *                         finding accesscodes.
+	 * @return the {@link Page list} of matching {@link AccessCodeEto}s.
+	 */
+	@Path("/accesscode/search")
+	@POST
+	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo searchCriteriaTo);
 
 }

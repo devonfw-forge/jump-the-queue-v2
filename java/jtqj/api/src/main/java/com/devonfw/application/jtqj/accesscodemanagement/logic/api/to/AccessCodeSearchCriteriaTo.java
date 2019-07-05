@@ -15,20 +15,26 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	private static final long serialVersionUID = 1L;
 
 	private String code;
+
 	private String uuid;
+
 	private Timestamp createdDate;
+
 	private Timestamp startTime;
+
 	private Timestamp endTime;
+
 	private Status status;
 
 	private Long queueId;
+
 	private StringSearchConfigTo codeOption;
+
 	private StringSearchConfigTo uuidOption;
 
 	/**
 	 * @return codeId
 	 */
-
 	public String getCode() {
 		return code;
 	}
@@ -36,7 +42,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param code setter for code attribute
 	 */
-
 	public void setCode(String code) {
 		this.code = code;
 	}
@@ -44,7 +49,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @return uuidId
 	 */
-
 	public String getUuid() {
 		return uuid;
 	}
@@ -52,7 +56,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param uuid setter for uuid attribute
 	 */
-
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
@@ -60,7 +63,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @return createdDateId
 	 */
-
 	public Timestamp getCreatedDate() {
 		return createdDate;
 	}
@@ -68,7 +70,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param createdDate setter for createdDate attribute
 	 */
-
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -76,7 +77,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @return startTimeId
 	 */
-
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -84,7 +84,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param startTime setter for startTime attribute
 	 */
-
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
@@ -92,7 +91,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @return endTimeId
 	 */
-
 	public Timestamp getEndTime() {
 		return endTime;
 	}
@@ -100,7 +98,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param endTime setter for endTime attribute
 	 */
-
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
@@ -108,7 +105,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @return statusId
 	 */
-
 	public Status getStatus() {
 		return status;
 	}
@@ -116,7 +112,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param status setter for status attribute
 	 */
-
 	public void setStatus(Status status) {
 		this.status = status;
 	}
@@ -126,7 +121,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	 *
 	 * @return queueId
 	 */
-
 	public Long getQueueId() {
 		return queueId;
 	}
@@ -134,7 +128,6 @@ public class AccessCodeSearchCriteriaTo extends AbstractSearchCriteriaTo {
 	/**
 	 * @param queue setter for queue attribute
 	 */
-
 	public void setQueueId(Long queueId) {
 		this.queueId = queueId;
 	}

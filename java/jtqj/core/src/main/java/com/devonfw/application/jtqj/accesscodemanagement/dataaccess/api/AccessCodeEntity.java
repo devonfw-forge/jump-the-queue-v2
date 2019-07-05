@@ -13,8 +13,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.devonfw.application.jtqj.accesscodemanagement.common.api.AccessCode;
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
