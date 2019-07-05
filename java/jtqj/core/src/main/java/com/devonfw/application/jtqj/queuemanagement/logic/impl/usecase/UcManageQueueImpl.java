@@ -23,6 +23,8 @@ import com.devonfw.application.jtqj.queuemanagement.logic.base.usecase.AbstractQ
 @Transactional
 public class UcManageQueueImpl extends AbstractQueueUc implements UcManageQueue {
 
+	private static final int DEFAULT_MIN_ATTENTION_TIME = 60;
+	private static final boolean QUEUE_NOT_STARTED = false;
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(UcManageQueueImpl.class);
 
@@ -45,6 +47,8 @@ public class UcManageQueueImpl extends AbstractQueueUc implements UcManageQueue 
 		// initialize, validate queueEntity here if necessary
 		if (queueEntity.getCreatedDate() == null) {
 			queueEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			queueEntity.setMinAttentionTime(DEFAULT_MIN_ATTENTION_TIME);
+			queueEntity.setStarted(QUEUE_NOT_STARTED);
 		}
 
 		QueueEntity resultEntity = getQueueRepository().save(queueEntity);

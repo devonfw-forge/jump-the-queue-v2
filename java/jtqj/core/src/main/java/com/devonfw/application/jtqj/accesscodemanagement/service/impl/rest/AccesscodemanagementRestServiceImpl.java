@@ -9,6 +9,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.service.api.rest.AccesscodemanagementRestService;
 
 /**
@@ -49,6 +50,11 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	@Override
 	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo searchCriteriaTo) {
 		return this.accesscodemanagement.findAccessCodes(searchCriteriaTo);
+	}
+
+	@Override
+	public AccessCodeCto findUuidAccessCode(Uuid uuid) {
+		return this.accesscodemanagement.findUuidAccessCode(uuid);
 	}
 
 }

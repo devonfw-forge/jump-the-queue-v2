@@ -23,6 +23,8 @@ RemoteSystemsTempFiles/
 .recommenders/
 .metadata/
 .sonarlint
+java/jtqj/core/.jtqj.mv.db
+java/jtqj/core/.jtqj.trace.db
 
 # Package Files #
 *.jar

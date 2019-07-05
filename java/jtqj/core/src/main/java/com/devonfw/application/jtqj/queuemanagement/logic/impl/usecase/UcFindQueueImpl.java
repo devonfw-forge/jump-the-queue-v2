@@ -30,7 +30,6 @@ import com.devonfw.application.jtqj.queuemanagement.logic.base.usecase.AbstractQ
 @Transactional
 public class UcFindQueueImpl extends AbstractQueueUc implements UcFindQueue {
 
-	private static final int DEFAULT_MIN_ATTENTION_TIME = 60;
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(UcFindQueueImpl.class);
 
@@ -62,15 +61,14 @@ public class UcFindQueueImpl extends AbstractQueueUc implements UcFindQueue {
 		QueueEto respQueue = new QueueEto();
 
 		if (!queues.getContent().isEmpty()) {
-		// Check if we have today's queue
-		QueueEto lastQueue =  getBeanMapper().map(queues.getContent().get(0), QueueEto.class);
-		todayQueue = queueToday(lastQueue.getCreatedDate());
-		respQueue = lastQueue;
+			// Check if we have today's queue
+			QueueEto lastQueue =  getBeanMapper().map(queues.getContent().get(0), QueueEto.class);
+			todayQueue = queueToday(lastQueue.getCreatedDate());
+			respQueue = lastQueue;
 		}
 		if(!todayQueue) {
 			// Create a queue for today
 			QueueEto newQueue = new QueueEto();
-			newQueue.setMinAttentionTime(DEFAULT_MIN_ATTENTION_TIME);
 			QueueEto savedQueue = queuemanagement.saveQueue(newQueue);
 			respQueue = savedQueue;
 		}

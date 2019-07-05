@@ -1,6 +1,5 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.impl.usecase;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Use case implementation for searching, filtering and getting AccessCodes
@@ -76,27 +78,30 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		return new PageImpl<>(ctos, pagResultTo, accesscodes.getTotalElements());
 	}
 
+	@Inject
+	Accesscodemanagement accessCodeManagement;
 	@Override
-	public AccessCodeCto findUuidAccessCode(String uuid) {
+	public AccessCodeCto findUuidAccessCode(Uuid uuid) {
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
 		AccessCodeCto visitorCode = new AccessCodeCto();
 		// Get today's queue
 		QueueEto dailyQueue = queueManagement.findDailyQueue();
+		visitorCode.setQueue(dailyQueue);
 		// Get code associated with uuid and today's queue
-		criteria.setUuid(uuid);
+
 		criteria.setQueueId(dailyQueue.getId());
+		criteria.setUuid(uuid.getUuid());
 		Page<AccessCodeEntity> codes = getAccessCodeRepository().findByCriteria(criteria);
 		// create code if user hasn't for today
 		if (codes.getContent().isEmpty()) {
 			AccessCodeEto newCode = new AccessCodeEto();
-			newCode.setUuid(uuid);
+			newCode.setUuid(uuid.getUuid());
 			newCode.setQueueId(dailyQueue.getId());
-			if (dailyQueue.getStarted()) {
+			if (dailyQueue.getStarted() == true) {
 				newCode.setStatus(Status.WAITING);
 			} else {
 				newCode.setStatus(Status.NOTSTARTED);
 			}
-			visitorCode.setQueue(dailyQueue);
 			AccessCodeEto lastCodeInQueue = getLastCodeInQueue(dailyQueue.getId());
 			// is queue empty?
 			if (lastCodeInQueue.getCreatedDate() == null) {
@@ -104,9 +109,8 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 			} else {
 				newCode.setCode(nextCodeString(lastCodeInQueue.getCode()));
 			}
-			AccessCodeEntity savedCode = getAccessCodeRepository()
-					.save(getBeanMapper().map(newCode, AccessCodeEntity.class));
-			visitorCode.setAccessCode(getBeanMapper().map(savedCode, AccessCodeEto.class));
+			AccessCodeEto savedCode = accessCodeManagement.saveAccessCode(newCode);
+			visitorCode.setAccessCode(savedCode);
 		} else {
 			visitorCode.setAccessCode(getBeanMapper().map(codes.getContent().get(0), AccessCodeEto.class));
 			visitorCode.setQueue(dailyQueue);

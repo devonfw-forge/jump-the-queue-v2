@@ -9,6 +9,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.general.logic.base.AbstractComponentFacade;
@@ -38,7 +39,7 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	}
 
 	@Override
-	public AccessCodeCto findUuidAccessCode(String uuid) {
+	public AccessCodeCto findUuidAccessCode(Uuid uuid) {
 		return ucFindAccessCode.findUuidAccessCode(uuid);
 	}
 

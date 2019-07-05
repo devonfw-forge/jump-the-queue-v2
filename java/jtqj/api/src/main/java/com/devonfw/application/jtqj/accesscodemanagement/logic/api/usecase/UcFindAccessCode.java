@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 
 public interface UcFindAccessCode {
 
@@ -33,7 +34,7 @@ public interface UcFindAccessCode {
 	 * @param uuid the uuid 'uuid' of the AccessCode.
 	 * @return The {@link AccessCodeEto} with such uuid 'uuid'
 	 */
-	AccessCodeCto findUuidAccessCode(String uuid);
+	AccessCodeCto findUuidAccessCode(Uuid uuid);
 
 	/**
 	 * Returns a AccessCode by its id 'id'.

@@ -15,6 +15,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 
 /**
  * The service interface for REST calls in order to execute the logic of
@@ -85,5 +86,15 @@ public interface AccesscodemanagementRestService {
 	@Path("/accesscode/search")
 	@POST
 	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo searchCriteriaTo);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#findUuidAccessCode}.
+	 *
+	 * @param uuid the uuid related to the accessCode in DB, if not found will create it
+	 * @return the {@link AccessCodeCto}.
+	 */
+	@Path("/accesscode/uuid")
+	@POST
+	public AccessCodeCto findUuidAccessCode(Uuid uuid);
 
 }
