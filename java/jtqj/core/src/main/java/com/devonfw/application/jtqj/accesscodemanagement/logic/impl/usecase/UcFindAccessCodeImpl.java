@@ -36,8 +36,8 @@ import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFindAccessCode {
 
 	private static final String QUEUE_LETTER_CODE = "Q";
-	private static final String FIRST_CODE_IN_QUEUE = "Q001";
-	private static final String LAST_CODE_IN_QUEUE = "Q999";
+	private static final String FIRST_CODE_IN_QUEUE = "001";
+	private static final String LAST_CODE_IN_QUEUE = "999";
 	/** Logger instance. */
 	private static final Logger LOG = LoggerFactory.getLogger(UcFindAccessCodeImpl.class);
 
@@ -94,7 +94,7 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 			AccessCodeEto lastCodeInQueue = getLastCodeInQueue(dailyQueue.getId());
 			// is queue empty?
 			if(lastCodeInQueue.getCreatedDate() == null) {
-				newCode.setCode(FIRST_CODE_IN_QUEUE);
+				newCode.setCode(QUEUE_LETTER_CODE + FIRST_CODE_IN_QUEUE);
 			} else {
 				newCode.setCode(nextCodeString(lastCodeInQueue.getCode()));
 			}
@@ -110,8 +110,8 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 	// Given a code, gives next
 	// Example: Input: Q009 Output: Q010
 	private String nextCodeString(String codeString) {
-		String nextCode = FIRST_CODE_IN_QUEUE;
-		if (!codeString.equals(LAST_CODE_IN_QUEUE)) {
+		String nextCode = QUEUE_LETTER_CODE + FIRST_CODE_IN_QUEUE;
+		if (!codeString.equals(QUEUE_LETTER_CODE + LAST_CODE_IN_QUEUE)) {
 			String numbers = codeString.substring(1);
 			int number = Integer.parseInt(numbers);
 			number = number + 1;
