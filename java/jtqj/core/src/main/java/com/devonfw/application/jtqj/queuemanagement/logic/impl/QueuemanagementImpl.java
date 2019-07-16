@@ -52,6 +52,9 @@ public class QueuemanagementImpl extends AbstractComponentFacade implements Queu
 		return this.ucFindQueue.findDailyQueue();
 	}
 
-
+	@Override
+	public QueueEto startQueue(QueueEto queue) {
+		return this.ucManageQueue.startQueue(queue);
+	}
 
 }

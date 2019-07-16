@@ -1,5 +1,7 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase;
 
+import java.util.List;
+
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 
 /**
@@ -26,4 +28,11 @@ public interface UcManageAccessCode {
 	 */
 	AccessCodeEto saveAccessCode(AccessCodeEto accessCode);
 
+	/**
+	 * Updates all accesCodes when a queue starts
+	 *
+	 * @param List of accessCodes related to such queue the {@link AccessCodeEto} to update.
+	 * @return void
+	 */
+	void updateCodesOnStartQueue(long queueId);
 }

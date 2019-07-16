@@ -79,6 +79,7 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 
 	@Inject
 	Accesscodemanagement accessCodeManagement;
+
 	@Override
 	public AccessCodeCto findUuidAccessCode(Uuid uuid) {
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
@@ -96,7 +97,7 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 			AccessCodeEto newCode = new AccessCodeEto();
 			newCode.setUuid(uuid.getUuid());
 			newCode.setQueueId(dailyQueue.getId());
-			if (dailyQueue.getStarted() == true) {
+			if (dailyQueue.getStarted()) {
 				newCode.setStatus(Status.WAITING);
 			} else {
 				newCode.setStatus(Status.NOTSTARTED);
@@ -160,4 +161,15 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		return mapPaginatedEntityList(accesscodes, AccessCodeEto.class);
 	}
 
+	@Override
+	public List<AccessCodeEto> findByQueue(long queueId) {
+		List<AccessCodeEto> etos = new ArrayList<>();
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(queueId);
+		Page<AccessCodeEntity> accessCodes = getAccessCodeRepository().findByCriteria(criteria);
+		for (AccessCodeEntity entity : accessCodes.getContent()) {
+			etos.add(getBeanMapper().map(entity, AccessCodeEto.class));
+		}
+		return etos;
+	}
 }

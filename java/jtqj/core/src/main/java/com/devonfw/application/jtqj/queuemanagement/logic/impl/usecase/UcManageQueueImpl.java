@@ -3,6 +3,7 @@ package com.devonfw.application.jtqj.queuemanagement.logic.impl.usecase;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
 import com.devonfw.application.jtqj.queuemanagement.dataaccess.api.QueueEntity;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.usecase.UcManageQueue;
@@ -54,5 +56,26 @@ public class UcManageQueueImpl extends AbstractQueueUc implements UcManageQueue 
 		QueueEntity resultEntity = getQueueRepository().save(queueEntity);
 		LOG.debug("Queue with id '{}' has been created.", resultEntity.getId());
 		return getBeanMapper().map(resultEntity, QueueEto.class);
+	}
+
+	@Inject
+	Accesscodemanagement accessCodeManagement;
+
+	@Override
+	public QueueEto startQueue(QueueEto queue) {
+		QueueEntity queueEntity = getBeanMapper().map(queue, QueueEntity.class);
+
+		if (queueEntity.getStarted()) {
+			LOG.debug("Queue with id '{}' is already started.", queueEntity.getId());
+		} else {
+			queueEntity.setStarted(true);
+			QueueEntity resultEntity = getQueueRepository().save(queueEntity);
+			
+			// Update all codes related to such queue
+			accessCodeManagement.updateCodesOnStartQueue(resultEntity.getId());
+			LOG.debug("Queue with id '{}' has been started.", resultEntity.getId());
+			queue = getBeanMapper().map(resultEntity, QueueEto.class);
+		}
+		return queue;
 	}
 }

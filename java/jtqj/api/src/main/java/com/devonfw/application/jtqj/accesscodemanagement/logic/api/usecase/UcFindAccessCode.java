@@ -52,4 +52,12 @@ public interface UcFindAccessCode {
 	 */
 	Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo criteria);
 
+	/**
+	 * Returns a list of Etos associated with a queue.
+	 *
+	 * @param queueId.
+	 * @return the {@link List} of matching {@link AccessCodeEto}s.
+	 */
+	List<AccessCodeEto> findByQueue(long queueId);
+
 }

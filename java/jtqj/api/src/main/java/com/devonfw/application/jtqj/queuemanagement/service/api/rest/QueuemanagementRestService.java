@@ -34,6 +34,11 @@ public interface QueuemanagementRestService {
 	@Path("/queue/{id}/")
 	public QueueEto getQueue(@PathParam("id") long id);
 
+	/**
+	 * Delegates to {@link Queuemanagement#findDailyQueue}.
+	 *
+	 * @return the {@link QueueEto}
+	 */
 	@GET
 	@Path("/queue/daily/")
 	public QueueEto findDailyQueue();
@@ -67,5 +72,15 @@ public interface QueuemanagementRestService {
 	@Path("/queue/search")
 	@POST
 	public Page<QueueEto> findQueues(QueueSearchCriteriaTo searchCriteriaTo);
+
+	/**
+	 * Delegates to {@link Queuemanagement#startQueue}.
+	 *
+	 * @param queue the {@link QueueEto} to be saved
+	 * @return the recently created {@link QueueEto}
+	 */
+	@POST
+	@Path("/queue/start")
+	public QueueEto startQueue(QueueEto queue);
 
 }

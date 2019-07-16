@@ -44,4 +44,9 @@ public class QueuemanagementRestServiceImpl implements QueuemanagementRestServic
 	public QueueEto findDailyQueue() {
 		return this.queuemanagement.findDailyQueue();
 	}
+
+	@Override
+	public QueueEto startQueue(QueueEto queue) {
+		return this.queuemanagement.startQueue(queue);
+	}
 }

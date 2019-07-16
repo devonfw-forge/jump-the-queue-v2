@@ -1,5 +1,7 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -64,6 +66,16 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	@Override
 	public Page<AccessCodeEto> findAccessCodes(AccessCodeSearchCriteriaTo criteria) {
 		return this.ucFindAccessCode.findAccessCodes(criteria);
+	}
+
+	@Override
+	public List<AccessCodeEto> findByQueue(long queueId) {
+		return this.ucFindAccessCode.findByQueue(queueId);
+	}
+
+	@Override
+	public void updateCodesOnStartQueue(long queueId) {
+		this.ucManageAccessCode.updateCodesOnStartQueue(queueId);
 	}
 
 }

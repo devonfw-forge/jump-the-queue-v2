@@ -24,4 +24,12 @@ public interface UcManageQueue {
 	 * @return the new {@link QueueEto} that has been saved with ID and version.
 	 */
 	QueueEto saveQueue(QueueEto queue);
+
+	/**
+	 * Starts a queue
+	 *
+	 * @param queue the {@link QueueEto} to start.
+	 * @return the new {@link QueueEto} that has been started.
+	 */
+	QueueEto startQueue(QueueEto queue);
 }
