@@ -22,7 +22,6 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
 
   getStartedQueue(event: Queue) {
     this.queue = event;
-    console.log(event);
   }
 
   ngOnDestroy() {

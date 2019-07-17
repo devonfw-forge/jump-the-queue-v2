@@ -4,7 +4,8 @@
         <button class="logout-button" mat-button (click)="return;">Log out</button>
     </div>
     <div class="started-queue-container" *ngIf="queue.started; else startQueueButton">
-        queue started - TODO
+        <app-owner-current-code></app-owner-current-code>
+        <app-owner-next-code></app-owner-next-code>
     </div>
     <ng-template #startQueueButton>
         <app-start-queue [queue]="queue" (passStartedQueue)="getStartedQueue($event)"></app-start-queue>
