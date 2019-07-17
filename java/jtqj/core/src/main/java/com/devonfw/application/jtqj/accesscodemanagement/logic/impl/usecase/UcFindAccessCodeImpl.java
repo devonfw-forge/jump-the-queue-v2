@@ -172,4 +172,32 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 		}
 		return etos;
 	}
+
+	@Override
+	public AccessCodeEto findCurrentCode(long queueId) {
+		AccessCodeEto currentCode = new AccessCodeEto();
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(queueId);
+		criteria.setStatus(Status.ATTENDING);
+		Page<AccessCodeEntity> accessCode = getAccessCodeRepository().findByCriteria(criteria);
+		// Check if we have a current code
+		if (accessCode.getContent().size() == 1) {
+			currentCode = getBeanMapper().map(accessCode.getContent().get(0), AccessCodeEto.class);
+		}
+		return currentCode;
+	}
+
+	@Override
+	public AccessCodeEto findNextCode(long queueId) {
+		AccessCodeEto nextCode = new AccessCodeEto();
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(queueId);
+		criteria.setStatus(Status.WAITING);
+		criteria.setPageable(PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "createdDate")));
+		Page<AccessCodeEntity> accessCode = getAccessCodeRepository().findByCriteria(criteria);
+		if (accessCode.getContent().size() == 1) {
+			nextCode = getBeanMapper().map(accessCode.getContent().get(0), AccessCodeEto.class);
+		}
+		return nextCode;
+	}
 }

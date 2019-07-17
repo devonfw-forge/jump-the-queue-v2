@@ -78,4 +78,18 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 		this.ucManageAccessCode.updateCodesOnStartQueue(queueId);
 	}
 
+	@Override
+	public AccessCodeEto callNextCode() {
+		return this.ucManageAccessCode.callNextCode();
+	}
+
+	@Override
+	public AccessCodeEto findCurrentCode(long queueId) {
+		return this.ucFindAccessCode.findCurrentCode(queueId);
+	}
+
+	@Override
+	public AccessCodeEto findNextCode(long queueId) {
+		return this.ucFindAccessCode.findNextCode(queueId);
+	}
 }

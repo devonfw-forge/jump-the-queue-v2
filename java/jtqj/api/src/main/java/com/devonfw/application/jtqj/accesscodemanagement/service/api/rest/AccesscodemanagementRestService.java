@@ -97,4 +97,13 @@ public interface AccesscodemanagementRestService {
 	@POST
 	public AccessCodeCto findUuidAccessCode(Uuid uuid);
 
+	/**
+	 * Delegates to {@link Accesscodemanagement#callNextCode}.
+	 *
+	 * @return the next accessCode if available{@link AccessCodeCto}.
+	 */
+	@Path("/accesscode/next")
+	@POST
+	public AccessCodeEto callNextCode();
+
 }

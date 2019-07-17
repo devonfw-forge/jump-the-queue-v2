@@ -57,4 +57,9 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 		return this.accesscodemanagement.findUuidAccessCode(uuid);
 	}
 
+	@Override
+	public AccessCodeEto callNextCode() {
+		return this.accesscodemanagement.callNextCode();
+	}
+
 }

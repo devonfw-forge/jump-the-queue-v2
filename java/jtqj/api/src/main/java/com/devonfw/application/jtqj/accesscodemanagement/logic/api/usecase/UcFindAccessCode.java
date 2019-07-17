@@ -60,4 +60,20 @@ public interface UcFindAccessCode {
 	 */
 	List<AccessCodeEto> findByQueue(long queueId);
 
+	/**
+	 * Returns a current AccessCode of dailyQueue.
+	 *
+	 * @param id The id 'id' of the dailyQueue.
+	 * @return The {@link AccessCodeEto} with status Attending
+	 */
+	AccessCodeEto findCurrentCode(long queueId);
+
+	/**
+	 * Returns a next AccessCode of dailyQueue.
+	 *
+	 * @param id The id 'id' of the dailyQueue.
+	 * @return The {@link AccessCodeEto} with status waiting and farthest in createdTime
+	 */
+	AccessCodeEto findNextCode(long queueId);
+
 }
