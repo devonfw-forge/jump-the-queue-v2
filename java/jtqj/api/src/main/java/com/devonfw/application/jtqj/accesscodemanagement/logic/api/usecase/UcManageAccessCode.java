@@ -35,4 +35,11 @@ public interface UcManageAccessCode {
 	 * @return void
 	 */
 	void updateCodesOnStartQueue(long queueId);
+
+	/**
+	 * Updates the current code and next code if available
+	 *
+	 * @return the next {@link AccessCodeEto} if available, else Eto will be empty
+	 */
+	AccessCodeEto callNextCode();
 }

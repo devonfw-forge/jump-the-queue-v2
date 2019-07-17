@@ -25,6 +25,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
 import com.devonfw.application.jtqj.general.common.api.Status;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
 /**
@@ -78,4 +79,30 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 		}
 	}
 
+	@Inject
+	Queuemanagement queueManagement;
+
+	@Override
+	public AccessCodeEto callNextCode() {
+		// Get daily queues so we get codes associated with it
+		long dailyQueueId = queueManagement.findDailyQueue().getId();
+
+		// 1. Check if we have current code being attended
+		AccessCodeEto currentCode = accessCodeManagement.findCurrentCode(dailyQueueId);
+		if (currentCode.getStatus() == Status.ATTENDING) {
+			// 1.1 Update current code
+			currentCode.setStatus(Status.ATTENDED);
+			currentCode.setEndTime(new Timestamp(System.currentTimeMillis()));
+			getAccessCodeRepository().save(getBeanMapper().map(currentCode, AccessCodeEntity.class));
+		}
+		// 2. Check if there is a next code else go 2.2
+		AccessCodeEto nextCode = accessCodeManagement.findNextCode(dailyQueueId);
+		if (nextCode.getStatus() == Status.WAITING) {
+			// 2.1 Update this code to attending and startDate and return it
+			nextCode.setStatus(Status.ATTENDING);
+			nextCode.setStartTime(new Timestamp(System.currentTimeMillis()));
+			getAccessCodeRepository().save(getBeanMapper().map(nextCode, AccessCodeEntity.class));
+		}
+		return nextCode;
+	}
 }
