@@ -1,0 +1,19 @@
+.owner-current-code-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    .owner-current-code-label-container,
+    .owner-current-code-value-container {
+        text-align: center;
+    }
+    .owner-current-code-label,
+    .owner-current-code-value {
+        color: #FFF;
+    }
+    .owner-current-code-label {
+        font-size: 21px;
+    }
+    .owner-current-code-value {
+        font-size: 65px;
+        line-height: 54px;
+    }
+}

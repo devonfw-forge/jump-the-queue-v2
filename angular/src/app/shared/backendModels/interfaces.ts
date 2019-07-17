@@ -34,8 +34,8 @@ export class Pageable {
 }
 
 export class FilterAccessCode {
-    createdDate: number;
-    status: Status;
+    createdDate?: number;
+    status?: Status;
     queueId: number;
     pageable: Pageable;
 }

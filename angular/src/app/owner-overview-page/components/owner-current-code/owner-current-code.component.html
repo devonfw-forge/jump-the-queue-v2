@@ -1,1 +1,11 @@
-<p>owner-current-code works!</p>
+<div class="owner-current-code-container">
+    <div class="owner-current-code-label-container">
+        <span *ngIf="currentCode?.code; else noMoreCodes" class="owner-current-code-label">ACTUAL TURN</span>
+    </div>
+    <ng-template #noMoreCodes>
+        <span class="owner-current-code-label">Waiting for more codes...</span>
+    </ng-template>
+    <div *ngIf="currentCode?.code" class="owner-current-code-value-container">
+        <span class="owner-current-code-value">{{currentCode.code}}</span>
+    </div>
+</div>
