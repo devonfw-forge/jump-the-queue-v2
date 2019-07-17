@@ -13,6 +13,10 @@ import { OwnerCurrentCodeComponent } from './owner-overview-page/components/owne
 import { OwnerNextCodeComponent } from './owner-overview-page/components/owner-next-code/owner-next-code.component';
 import { StartQueueComponent } from './owner-overview-page/components/start-queue/start-queue.component';
 
+import { AccessCodeService } from './shared/services/access-code.service';
+import { QueueService } from './shared/services/queue.service';
+import { LocalStorageService } from './visitor-overview-page/services/local-storage.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +34,11 @@ import { StartQueueComponent } from './owner-overview-page/components/start-queu
     AppRoutingModule,
     CoreModule
   ],
-  providers: [],
+  providers: [
+    AccessCodeService,
+    QueueService,
+    LocalStorageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

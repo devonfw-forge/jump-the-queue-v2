@@ -1,3 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@font-face {
+    font-family: 'Ubuntu-R';
+    src: url("/assets/fonts/Ubuntu-R.ttf");
+}
+
+@font-face {
+    font-family: 'Ubuntu-B';
+    src: url("/assets/fonts/Ubuntu-B.ttf");
+}
+
+@font-face {
+    font-family: 'Ubuntu-M';
+    src: url("/assets/fonts/Ubuntu-M.ttf");
+}
+
+* {
+    font-family: 'Ubuntu-R' !important;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    @media (min-width: 320px) and (max-width: 480px) {
+        background: #FFF url('/assets/images/phone_portrait.png') no-repeat;
+        background-size: cover;
+    }
+    @media (min-width: 481px) and (max-width: 767px) {
+        background: #FFF url('/assets/images/tablet_portrait.png') no-repeat;
+        background-size: cover;
+    }
+    @media (min-width: 768px) {
+        background: #FFF url('/assets/images/tablet_landscape.png') no-repeat;
+        background-size: cover;
+    }
+}
+
+body {
+    padding: 25px;
+    box-sizing: border-box;
+}

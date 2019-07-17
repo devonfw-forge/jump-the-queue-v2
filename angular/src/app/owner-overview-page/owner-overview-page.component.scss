@@ -1,0 +1,12 @@
+.owner-overview-page-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .queueLogoContainer {
+        display: flex;
+        justify-content: space-between;
+    }
+    .current-code-label {
+        color: #FFF;
+    }
+}

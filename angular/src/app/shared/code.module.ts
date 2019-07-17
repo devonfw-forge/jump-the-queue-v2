@@ -18,7 +18,8 @@ import { QueueLogoComponent } from './components/queue-logo/queue-logo.component
         CommonModule,
         MatInputModule,
         MatButtonModule,
-        FormsModule
+        FormsModule,
+        QueueLogoComponent
     ],
     providers: [
         HttpClientModule,

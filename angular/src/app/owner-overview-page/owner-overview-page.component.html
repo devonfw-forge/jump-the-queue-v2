@@ -1,1 +1,12 @@
-<p>owner-overview-page works!</p>
+<div *ngIf="queue" class="owner-overview-page-container">
+    <div class="queueLogoContainer">
+        <app-queue-logo></app-queue-logo>
+        <button class="logout-button" mat-button (click)="return;">Log out</button>
+    </div>
+    <div class="started-queue-container" *ngIf="queue.started; else startQueueButton">
+        queue started - TODO
+    </div>
+    <ng-template #startQueueButton>
+        <app-start-queue [queue]="queue" (passStartedQueue)="getStartedQueue($event)"></app-start-queue>
+    </ng-template>
+</div>

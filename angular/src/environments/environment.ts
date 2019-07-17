@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrlRestServices: 'http://localhost:8081/services/rest/',
+  localStorageUuidKey: 'jtquuid',
+  serverPollingInterval: 3000
 };
 
 /*

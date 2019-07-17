@@ -1,0 +1,23 @@
+.owner-start-queue-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5vh;
+    .owner-start-queue-label {
+        text-align: center;
+        color: #FFF;
+    }
+    .button-container {
+        flex: 4;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .owner-start-queue-button {
+            color: #FFF;
+            width: 150px;
+            background-color: #0C75B1;
+            border-color: #0C75B1;
+            border-radius: 30px;
+        }
+    }
+}
