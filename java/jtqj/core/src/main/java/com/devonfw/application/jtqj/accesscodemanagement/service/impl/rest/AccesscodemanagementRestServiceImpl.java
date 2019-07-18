@@ -11,6 +11,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.service.api.rest.AccesscodemanagementRestService;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
 /**
  * The service implementation for REST calls in order to execute the logic of
@@ -60,6 +61,11 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	@Override
 	public AccessCodeEto callNextCode() {
 		return this.accesscodemanagement.callNextCode();
+	}
+
+	@Override
+	public AccessCodeEto findCurrentCode(QueueEto queue) {
+		return this.accesscodemanagement.findCurrentCode(queue.getId());
 	}
 
 }
