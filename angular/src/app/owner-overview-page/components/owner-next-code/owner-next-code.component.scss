@@ -1,0 +1,21 @@
+.owner-next-code-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5vh;
+    .button-container {
+        flex: 4;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .owner-next-code-button {
+            color: #FFF;
+            width: 150px;
+            border-radius: 30px;
+            &:not([disabled]) {
+                background-color: #0C75B1;
+                border-color: #0C75B1;
+            }
+        }
+    }
+}

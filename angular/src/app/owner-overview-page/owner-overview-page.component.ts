@@ -20,15 +20,20 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.queueSub = this.queueService.getTodaysQueue().subscribe(queue => {
       this.queue = queue;
-      this.codeSub = this.accessCodeService.getCurrentCode(this.queue.id).subscribe(code => {
-        this.currentCode = code;
-        debugger;
-      });
+      if (this.queue.started) {
+        this.codeSub = this.accessCodeService.getCurrentCode(this.queue).subscribe(code => {
+          this.currentCode = code;
+        });
+      }
     });
   }
 
   getStartedQueue(event: Queue) {
     this.queue = event;
+  }
+
+  refreshCurrentCode(event: AccessCode) {
+    this.currentCode = event;
   }
 
   ngOnDestroy() {

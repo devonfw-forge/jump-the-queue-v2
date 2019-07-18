@@ -21,21 +21,3 @@ export class AccessCode {
 }
 
 export class Owner {}
-
-export class Sort {
-    property: string;
-    direction: Direction;
-}
-
-export class Pageable {
-    pageNumber: number;
-    pageSize: number;
-    sort?: Sort[];
-}
-
-export class FilterAccessCode {
-    createdDate?: number;
-    status?: Status;
-    queueId: number;
-    pageable: Pageable;
-}
