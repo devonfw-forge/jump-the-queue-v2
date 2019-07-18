@@ -1,1 +1,11 @@
-<p>visitor-overview-page works!</p>
+<div class="code-overview-page-container">
+    <div class="queueLogoContainer">
+        <app-queue-logo></app-queue-logo>
+    </div>
+    <div class="visitorNumberContainer">
+        <app-visitor-code [visitorCode]="visitorCode"></app-visitor-code>
+    </div>
+    <div class="currentCodeContainer">
+        <app-visitor-current-code></app-visitor-current-code>
+    </div>
+</div>

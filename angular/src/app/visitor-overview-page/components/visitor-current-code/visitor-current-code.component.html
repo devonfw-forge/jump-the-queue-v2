@@ -1,1 +1,11 @@
-<p>visitor-current-code works!</p>
+<div class="visitor-current-code-container">
+    <div *ngIf="currentCode?.code" class="visitor-current-code-label-container">
+        <span class="visitor-current-code-label">ACTUAL TURN</span>
+    </div>
+    <div *ngIf="!queue?.started">
+        <span>Queue has not been started yet</span>
+    </div>
+    <div *ngIf="currentCode?.code" class="visitor-current-code-value-container">
+        <span class="visitor-current-code-value">{{currentCode.code}}</span>
+    </div>
+</div>

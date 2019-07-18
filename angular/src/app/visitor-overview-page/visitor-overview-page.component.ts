@@ -1,15 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { QueueService } from './../shared/services/queue.service';
+import { AccessCodeService } from './../shared/services/access-code.service';
+import { LocalStorageService } from './services/local-storage.service';
+import { AccessCode } from '../shared/backendModels/interfaces';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-visitor-overview-page',
   templateUrl: './visitor-overview-page.component.html',
   styleUrls: ['./visitor-overview-page.component.scss']
 })
-export class VisitorOverviewPageComponent implements OnInit {
+export class VisitorOverviewPageComponent implements OnInit, OnDestroy {
+  private visitorCode: AccessCode;
+  private visitorCodeSub: Subscription;
 
-  constructor() { }
+  constructor(
+    private queueService: QueueService,
+    private accessCodeService: AccessCodeService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit() {
+    // 1. Get uuid
+    const uuid = {uuid: ''};
+    uuid.uuid = this.localStorageService.getUuid();
+    // 2. Get code
+    //TODO: change backend to return just eto and not cto
+    this.visitorCodeSub = this.accessCodeService.getCodeByUuid(uuid).subscribe(content => this.visitorCode = content['accessCode']);
   }
 
+  ngOnDestroy() {
+    this.visitorCodeSub.unsubscribe();
+  }
 }
