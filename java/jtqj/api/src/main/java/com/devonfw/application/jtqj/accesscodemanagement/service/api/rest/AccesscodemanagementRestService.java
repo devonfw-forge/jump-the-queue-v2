@@ -16,6 +16,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
 /**
  * The service interface for REST calls in order to execute the logic of
@@ -100,10 +101,20 @@ public interface AccesscodemanagementRestService {
 	/**
 	 * Delegates to {@link Accesscodemanagement#callNextCode}.
 	 *
-	 * @return the next accessCode if available{@link AccessCodeCto}.
+	 * @return the next accessCode if available{@link AccessCodeEto}.
 	 */
 	@Path("/accesscode/next")
 	@POST
 	public AccessCodeEto callNextCode();
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#findCurrentCode}.
+	 *
+	 *@param queue associated for current code
+	 * @return the current accessCode if available{@link AccessCodeEto}.
+	 */
+	@Path("/accesscode/current")
+	@POST
+	public AccessCodeEto findCurrentCode(QueueEto queue);
 
 }
