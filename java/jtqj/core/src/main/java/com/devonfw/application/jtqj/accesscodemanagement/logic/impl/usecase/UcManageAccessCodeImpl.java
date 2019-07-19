@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,6 +23,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
 import com.devonfw.application.jtqj.general.common.api.Status;
@@ -36,6 +38,7 @@ import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 @Transactional
 public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcManageAccessCode {
 
+	private static final int DEFAULT_ESTIMATED_TIME_PER_USER_IN_MILISECONDS = 120000;
 	/**
 	 * Logger instance.
 	 */
@@ -104,5 +107,28 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 			getAccessCodeRepository().save(getBeanMapper().map(nextCode, AccessCodeEntity.class));
 		}
 		return nextCode;
+	}
+
+	@Override
+	public EstimatedTime calculateEstimatedTime(AccessCodeEto accessCode) {
+		EstimatedTime estimated = new EstimatedTime();
+		// Get how many codes are ahead of given code
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(accessCode.getQueueId());
+		criteria.setStatus(Status.WAITING);
+		criteria.setPageable(PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "createdDate")));
+		Page<AccessCodeEntity> result = getAccessCodeRepository().findByCriteria(criteria);
+
+		// TODO: Refactor this
+		for (AccessCodeEntity entity: result.getContent()) {
+			if (entity.getId().equals(accessCode.getId())) {
+				int index = result.getContent().indexOf(entity);
+				index = index + 1; // + attending code
+				Timestamp estimatedTimestamp = new Timestamp(System.currentTimeMillis() + (index * DEFAULT_ESTIMATED_TIME_PER_USER_IN_MILISECONDS));
+				estimated.setEstimated(estimatedTimestamp);
+				return estimated;
+			}
+		}
+		return estimated;
 	}
 }

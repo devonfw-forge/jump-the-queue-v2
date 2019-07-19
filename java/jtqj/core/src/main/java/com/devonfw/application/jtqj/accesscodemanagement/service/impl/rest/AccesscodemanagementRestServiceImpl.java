@@ -9,6 +9,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.service.api.rest.AccesscodemanagementRestService;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
@@ -66,6 +67,11 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	@Override
 	public AccessCodeEto findCurrentCode(QueueEto queue) {
 		return this.accesscodemanagement.findCurrentCode(queue.getId());
+	}
+
+	@Override
+	public EstimatedTime getEstimatedTime(AccessCodeEto code) {
+		return this.accesscodemanagement.calculateEstimatedTime(code);
 	}
 
 }

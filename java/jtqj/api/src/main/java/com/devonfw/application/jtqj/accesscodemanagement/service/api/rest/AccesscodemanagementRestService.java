@@ -15,6 +15,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
@@ -110,11 +111,20 @@ public interface AccesscodemanagementRestService {
 	/**
 	 * Delegates to {@link Accesscodemanagement#findCurrentCode}.
 	 *
-	 *@param queue associated for current code
+	 * @param queue associated for current code
 	 * @return the current accessCode if available{@link AccessCodeEto}.
 	 */
 	@Path("/accesscode/current")
 	@POST
 	public AccessCodeEto findCurrentCode(QueueEto queue);
 
+	/**
+	 * Delegates to {@link Accesscodemanagement#calculateEstimatedTime}.
+	 *
+	 * @param code
+	 * @return the the estimated time {@link EstimatedTime}.
+	 */
+	@Path("/accesscode/estimated")
+	@POST
+	public EstimatedTime getEstimatedTime(AccessCodeEto code);
 }

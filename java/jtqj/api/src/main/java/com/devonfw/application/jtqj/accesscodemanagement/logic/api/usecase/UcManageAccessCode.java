@@ -3,6 +3,7 @@ package com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase;
 import java.util.List;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 
 /**
  * Interface of UcManageAccessCode to centralize documentation and signatures of
@@ -42,4 +43,11 @@ public interface UcManageAccessCode {
 	 * @return the next {@link AccessCodeEto} if available, else Eto will be empty
 	 */
 	AccessCodeEto callNextCode();
+
+
+	/**
+	 * @param accessCode
+	 * @return the estimatedTime for given access code
+	 */
+	EstimatedTime calculateEstimatedTime(AccessCodeEto accessCode);
 }
