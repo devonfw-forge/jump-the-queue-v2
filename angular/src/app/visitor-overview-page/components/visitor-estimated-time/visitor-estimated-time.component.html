@@ -1,0 +1,13 @@
+<div *ngIf="estimated?.miliseconds != estimated?.defaultTimeByUserInMs" class="visitor-estimated-time-container">
+    <div class="estimated-time-container">
+        <span class="estimated-time">{{estimated.miliseconds / 60000}} minutes</span>
+    </div>
+    <div class="estimated-time-label-container">
+        <span class="estimated-time-label">ESTIMATED WAITING TIME</span>
+    </div>
+</div>
+<div *ngIf="estimated?.miliseconds != 0 && estimated?.miliseconds == estimated?.defaultTimeByUserInMs" class="visitor-estimated-time-container">
+    <div class="estimated-time-container">
+        <span class="estimated-time">You will be attended soon</span>
+    </div>
+</div>

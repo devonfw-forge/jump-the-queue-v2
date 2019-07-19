@@ -124,8 +124,9 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 			if (entity.getId().equals(accessCode.getId())) {
 				int index = result.getContent().indexOf(entity);
 				index = index + 1; // + attending code
-				Timestamp estimatedTimestamp = new Timestamp(System.currentTimeMillis() + (index * DEFAULT_ESTIMATED_TIME_PER_USER_IN_MILISECONDS));
-				estimated.setEstimated(estimatedTimestamp);
+				long estimatedInMs = index * DEFAULT_ESTIMATED_TIME_PER_USER_IN_MILISECONDS;
+				estimated.setMiliseconds(estimatedInMs);
+				estimated.setDefaultTimeByUserInMs(DEFAULT_ESTIMATED_TIME_PER_USER_IN_MILISECONDS);
 				return estimated;
 			}
 		}

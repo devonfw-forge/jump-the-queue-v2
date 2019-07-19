@@ -21,3 +21,8 @@ export class AccessCode {
 }
 
 export class Owner {}
+
+export class EstimatedTime {
+    miliseconds: number;
+    defaultTimeByUserInMs: number;
+}

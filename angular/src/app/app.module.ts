@@ -16,6 +16,7 @@ import { StartQueueComponent } from './owner-overview-page/components/start-queu
 import { AccessCodeService } from './shared/services/access-code.service';
 import { QueueService } from './shared/services/queue.service';
 import { LocalStorageService } from './visitor-overview-page/services/local-storage.service';
+import { VisitorEstimatedTimeComponent } from './visitor-overview-page/components/visitor-estimated-time/visitor-estimated-time.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { LocalStorageService } from './visitor-overview-page/services/local-stor
     OwnerOverviewPageComponent,
     OwnerCurrentCodeComponent,
     OwnerNextCodeComponent,
-    StartQueueComponent
+    StartQueueComponent,
+    VisitorEstimatedTimeComponent
   ],
   imports: [
     BrowserModule,

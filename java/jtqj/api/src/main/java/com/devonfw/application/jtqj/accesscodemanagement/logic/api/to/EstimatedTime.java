@@ -1,21 +1,35 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.api.to;
 
-import java.sql.Timestamp;
-
 public class EstimatedTime {
-	private Timestamp estimated;
+	private long miliseconds;
+	private long defaultTimeByUserInMs;
+
+
+	/**
+	 * @return the defaultTimeByUserInMs
+	 */
+	public long getDefaultTimeByUserInMs() {
+		return defaultTimeByUserInMs;
+	}
+
+	/**
+	 * @param defaultTimeByUserInMs the defaultTimeByUserInMs to set
+	 */
+	public void setDefaultTimeByUserInMs(long defaultTimeByUserInMs) {
+		this.defaultTimeByUserInMs = defaultTimeByUserInMs;
+	}
 
 	/**
 	 * @return the estimated
 	 */
-	public Timestamp getEstimated() {
-		return estimated;
+	public long getMiliseconds() {
+		return miliseconds;
 	}
 
 	/**
 	 * @param estimated the estimated to set
 	 */
-	public void setEstimated(Timestamp estimated) {
-		this.estimated = estimated;
+	public void setMiliseconds(long miliseconds) {
+		this.miliseconds = miliseconds;
 	}
 }
