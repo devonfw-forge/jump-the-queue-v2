@@ -11,6 +11,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
@@ -91,5 +92,10 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	@Override
 	public AccessCodeEto findNextCode(long queueId) {
 		return this.ucFindAccessCode.findNextCode(queueId);
+	}
+
+	@Override
+	public EstimatedTime calculateEstimatedTime(AccessCodeEto code) {
+		return this.ucManageAccessCode.calculateEstimatedTime(code);
 	}
 }
