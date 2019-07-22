@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.RemainingCodes;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 
 public interface UcFindAccessCode {
@@ -74,6 +76,13 @@ public interface UcFindAccessCode {
 	 * @param id The id 'id' of the dailyQueue.
 	 * @return The {@link AccessCodeEto} with status waiting and farthest in createdTime
 	 */
-	AccessCodeEto findNextCode(long queueId);
+	NextCodeCto findNextCode(long queueId);
 
+	/**
+	 * Returns a next AccessCode of dailyQueue.
+	 *
+	 * @param id The id 'id' of the dailyQueue.
+	 * @return The {@link AccessCodeEto} with status waiting and farthest in createdTime
+	 */
+	RemainingCodes findRemainingCodes();
 }

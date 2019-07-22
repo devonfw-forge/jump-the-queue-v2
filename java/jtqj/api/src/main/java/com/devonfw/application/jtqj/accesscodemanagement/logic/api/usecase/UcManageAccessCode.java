@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
 
 /**
  * Interface of UcManageAccessCode to centralize documentation and signatures of
@@ -40,9 +41,9 @@ public interface UcManageAccessCode {
 	/**
 	 * Updates the current code and next code if available
 	 *
-	 * @return the next {@link AccessCodeEto} if available, else Eto will be empty
+	 * @return {@link AccessCodeCto} if available, else code will be empty
 	 */
-	AccessCodeEto callNextCode();
+	NextCodeCto callNextCode();
 
 
 	/**

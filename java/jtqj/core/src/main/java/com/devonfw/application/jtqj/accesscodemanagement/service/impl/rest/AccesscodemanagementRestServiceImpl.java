@@ -10,6 +10,8 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.RemainingCodes;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.service.api.rest.AccesscodemanagementRestService;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
@@ -60,7 +62,7 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	}
 
 	@Override
-	public AccessCodeEto callNextCode() {
+	public NextCodeCto callNextCode() {
 		return this.accesscodemanagement.callNextCode();
 	}
 
@@ -72,6 +74,11 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	@Override
 	public EstimatedTime getEstimatedTime(AccessCodeEto code) {
 		return this.accesscodemanagement.calculateEstimatedTime(code);
+	}
+
+	@Override
+	public RemainingCodes getRemaningCodes() {
+		return this.accesscodemanagement.findRemainingCodes();
 	}
 
 }

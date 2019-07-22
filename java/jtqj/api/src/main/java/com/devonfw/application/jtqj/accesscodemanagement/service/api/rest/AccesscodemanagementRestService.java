@@ -16,6 +16,8 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.RemainingCodes;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
@@ -102,11 +104,11 @@ public interface AccesscodemanagementRestService {
 	/**
 	 * Delegates to {@link Accesscodemanagement#callNextCode}.
 	 *
-	 * @return the next accessCode if available{@link AccessCodeEto}.
+	 * @return the next accessCode if available{@link AccessCodeCto}.
 	 */
 	@Path("/accesscode/next")
 	@POST
-	public AccessCodeEto callNextCode();
+	public NextCodeCto callNextCode();
 
 	/**
 	 * Delegates to {@link Accesscodemanagement#findCurrentCode}.
@@ -127,4 +129,13 @@ public interface AccesscodemanagementRestService {
 	@Path("/accesscode/estimated")
 	@POST
 	public EstimatedTime getEstimatedTime(AccessCodeEto code);
+
+	/**
+	 * Delegates to {@link Accesscodemanagement#remainingCodes}.
+	 *
+	 * @return how many codes with status == waiting {@link RemainingCode}.
+	 */
+	@Path("/accesscode/remaining")
+	@POST
+	public RemainingCodes getRemaningCodes();
 }
