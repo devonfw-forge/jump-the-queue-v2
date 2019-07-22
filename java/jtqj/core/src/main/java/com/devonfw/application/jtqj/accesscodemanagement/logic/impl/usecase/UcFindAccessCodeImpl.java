@@ -22,6 +22,8 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodeman
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.RemainingCodes;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
@@ -188,16 +190,31 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 	}
 
 	@Override
-	public AccessCodeEto findNextCode(long queueId) {
-		AccessCodeEto nextCode = new AccessCodeEto();
+	public NextCodeCto findNextCode(long queueId) {
+		NextCodeCto nextCodeCto = new NextCodeCto();
+		RemainingCodes remainingCodes = new RemainingCodes();
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
 		criteria.setQueueId(queueId);
 		criteria.setStatus(Status.WAITING);
-		criteria.setPageable(PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "createdDate")));
+		criteria.setPageable(PageRequest.of(0,Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "createdDate")));
 		Page<AccessCodeEntity> accessCode = getAccessCodeRepository().findByCriteria(criteria);
-		if (accessCode.getContent().size() == 1) {
-			nextCode = getBeanMapper().map(accessCode.getContent().get(0), AccessCodeEto.class);
+		remainingCodes.setRemainingCodes(accessCode.getContent().size());
+		nextCodeCto.setRemainingCodes(remainingCodes);
+		if (!accessCode.getContent().isEmpty()) {
+			nextCodeCto.setAccessCode(getBeanMapper().map(accessCode.getContent().get(0), AccessCodeEto.class));
 		}
-		return nextCode;
+		return nextCodeCto;
+	}
+
+	@Override
+	public RemainingCodes findRemainingCodes() {
+		RemainingCodes remaining = new RemainingCodes();
+		QueueEto dailyQueue = queueManagement.findDailyQueue();
+		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
+		criteria.setQueueId(dailyQueue.getId());
+		criteria.setStatus(Status.WAITING);
+		Page<AccessCodeEntity> accessCodes = getAccessCodeRepository().findByCriteria(criteria);
+		remaining.setRemainingCodes(accessCodes.getContent().size());
+		return remaining;
 	}
 }

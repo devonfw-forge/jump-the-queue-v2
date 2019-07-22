@@ -24,6 +24,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCode
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
 import com.devonfw.application.jtqj.general.common.api.Status;
@@ -63,7 +64,7 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 		if (accessCodeEntity.getCreatedDate() == null) {
 			accessCodeEntity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
-		// initialize, validate accessCodeEntity here if necessary
+		// Initialize, validate accessCodeEntity here if necessary
 		AccessCodeEntity resultEntity = getAccessCodeRepository().save(accessCodeEntity);
 		LOG.debug("AccessCode with id '{}' has been created.", resultEntity.getId());
 		return getBeanMapper().map(resultEntity, AccessCodeEto.class);
@@ -86,27 +87,29 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 	Queuemanagement queueManagement;
 
 	@Override
-	public AccessCodeEto callNextCode() {
+	public NextCodeCto callNextCode() {
 		// Get daily queues so we get codes associated with it
 		long dailyQueueId = queueManagement.findDailyQueue().getId();
 
-		// 1. Check if we have current code being attended
+		// Check if we have current code being attended
 		AccessCodeEto currentCode = accessCodeManagement.findCurrentCode(dailyQueueId);
 		if (currentCode.getStatus() == Status.ATTENDING) {
-			// 1.1 Update current code
+			// Update current code
 			currentCode.setStatus(Status.ATTENDED);
 			currentCode.setEndTime(new Timestamp(System.currentTimeMillis()));
 			getAccessCodeRepository().save(getBeanMapper().map(currentCode, AccessCodeEntity.class));
 		}
-		// 2. Check if there is a next code else go 2.2
-		AccessCodeEto nextCode = accessCodeManagement.findNextCode(dailyQueueId);
-		if (nextCode.getStatus() == Status.WAITING) {
-			// 2.1 Update this code to attending and startDate and return it
-			nextCode.setStatus(Status.ATTENDING);
-			nextCode.setStartTime(new Timestamp(System.currentTimeMillis()));
-			getAccessCodeRepository().save(getBeanMapper().map(nextCode, AccessCodeEntity.class));
+		// Check if there is a next code else go 2.2
+		NextCodeCto nextCodeCto = accessCodeManagement.findNextCode(dailyQueueId);
+		if (nextCodeCto.getAccessCode().getStatus() == Status.WAITING) {
+			// Update this code to attending and startDate and return it
+			nextCodeCto.getAccessCode().setStatus(Status.ATTENDING);
+			nextCodeCto.getAccessCode().setStartTime(new Timestamp(System.currentTimeMillis()));
+			getAccessCodeRepository().save(getBeanMapper().map(nextCodeCto.getAccessCode(), AccessCodeEntity.class));
+			// Remove above code from remaining codes
+			nextCodeCto.getRemainingCodes().setRemainingCodes(nextCodeCto.getRemainingCodes().getRemainingCodes() - 1);
 		}
-		return nextCode;
+		return nextCodeCto;
 	}
 
 	@Override
