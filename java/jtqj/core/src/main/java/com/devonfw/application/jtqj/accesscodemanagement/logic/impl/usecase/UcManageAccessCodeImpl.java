@@ -101,7 +101,7 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 		}
 		// Check if there is a next code else go 2.2
 		NextCodeCto nextCodeCto = accessCodeManagement.findNextCode(dailyQueueId);
-		if (nextCodeCto.getAccessCode().getStatus() == Status.WAITING) {
+		if (nextCodeCto.getAccessCode() != null && nextCodeCto.getAccessCode().getStatus() == Status.WAITING) {
 			// Update this code to attending and startDate and return it
 			nextCodeCto.getAccessCode().setStatus(Status.ATTENDING);
 			nextCodeCto.getAccessCode().setStartTime(new Timestamp(System.currentTimeMillis()));
