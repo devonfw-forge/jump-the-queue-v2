@@ -2,7 +2,14 @@
     display: flex;
     flex-direction: column;
     margin-top: 5vh;
+    .codes-count-container {
+        text-align: center;
+        .codes-count-label {
+            color: #FFF;
+        }
+    }
     .button-container {
+        margin-top: 10px;
         flex: 4;
         display: flex;
         flex-direction: column;

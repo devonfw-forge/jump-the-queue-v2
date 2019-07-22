@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { AccessCode, EstimatedTime } from './../backendModels/interfaces';
+import { AccessCode, EstimatedTime, NextCodeCto, RemainingCodes } from './../backendModels/interfaces';
 import { Queue } from '../backendModels/interfaces';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class AccessCodeService {
     return this.http.post<AccessCode>(this.baseUrl + 'accesscodemanagement/v1/accesscode/current', queue);
   }
 
-  callNextCode(): Observable<AccessCode> {
-    return this.http.post<AccessCode>(this.baseUrl + 'accesscodemanagement/v1/accesscode/next', {});
+  callNextCode(): Observable<NextCodeCto> {
+    return this.http.post<NextCodeCto>(this.baseUrl + 'accesscodemanagement/v1/accesscode/next', {});
   }
 
   getCodeByUuid(uuid: {'uuid': string}): Observable<AccessCode> {
@@ -28,5 +28,9 @@ export class AccessCodeService {
 
   getEstimatedTimeByCode(code: AccessCode): Observable<EstimatedTime> {
     return this.http.post<EstimatedTime>(this.baseUrl + 'accesscodemanagement/v1/accesscode/estimated', code);
+  }
+
+  getRemainingCodesCount(): Observable<RemainingCodes> {
+    return this.http.post<RemainingCodes>(this.baseUrl + 'accesscodemanagement/v1/accesscode/remaining', {});
   }
 }

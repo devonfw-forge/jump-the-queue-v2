@@ -26,3 +26,12 @@ export class EstimatedTime {
     miliseconds: number;
     defaultTimeByUserInMs: number;
 }
+
+export class RemainingCodes {
+    remainingCodes: number;
+}
+
+export class NextCodeCto {
+    accessCode: AccessCode;
+    remainingCodes: RemainingCodes;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 import { Subscription } from 'rxjs';
 import { AccessCode } from 'src/app/shared/backendModels/interfaces';
@@ -10,22 +10,43 @@ import { AccessCode } from 'src/app/shared/backendModels/interfaces';
 })
 export class OwnerNextCodeComponent implements OnInit, OnDestroy {
 @Output() updateCurrentCode = new EventEmitter();
+@Input() currentCode: AccessCode;
 private nextCodeSub: Subscription;
+private remainingCodesCount: number;
+private remainingCodesCountSub: Subscription;
+private buttonStatus: string;
 
   constructor(private accessCodeService: AccessCodeService) { }
 
   ngOnInit() {
+    this.remainingCodesCountSub = this.accessCodeService.getRemainingCodesCount().subscribe(v => {
+      this.remainingCodesCount = v.remainingCodes;
+      if (this.remainingCodesCount > 0) {
+        this.buttonStatus = 'Call Next';
+      } else if (this.remainingCodesCount === 0 && this.currentCode.code) {
+        this.buttonStatus = 'Finish Current';
+      } else {
+        this.buttonStatus = 'Call Next';
+      }
+    });
   }
 
   callNext() {
-    this.nextCodeSub = this.accessCodeService.callNextCode().subscribe(
-      currentCode => this.updateCurrentCode.emit(currentCode)
-    );
+    this.nextCodeSub = this.accessCodeService.callNextCode().subscribe(nextCodeCto => {
+      this.remainingCodesCount = nextCodeCto.remainingCodes.remainingCodes;
+      if (!nextCodeCto.accessCode) {
+        this.buttonStatus = 'Call Next';
+      } else if (nextCodeCto.remainingCodes.remainingCodes === 0) {
+        this.buttonStatus = 'Finish Current';
+      } else {
+        this.buttonStatus = 'Call Next';
+      }
+      this.updateCurrentCode.emit(nextCodeCto.accessCode);
+    });
   }
 
   ngOnDestroy() {
     this.nextCodeSub.unsubscribe();
+    this.remainingCodesCountSub.unsubscribe();
   }
 }
-
-//TODO: disable button when there are no more codes in queue

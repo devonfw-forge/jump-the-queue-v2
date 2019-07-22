@@ -1,5 +1,16 @@
 <div class="owner-next-code-container">
+    <div class="codes-count-container">
+        <span *ngIf="remainingCodesCount == 0" class="codes-count-label">
+            There are no visitors in the queue.
+        </span>
+        <span *ngIf="remainingCodesCount == 1" class="codes-count-label">
+            There is {{remainingCodesCount}} visitor waiting.
+        </span>
+        <span *ngIf="remainingCodesCount > 1" class="codes-count-label">
+            There are {{remainingCodesCount}} visitors waiting.
+        </span>
+    </div>
     <div class="button-container">
-        <button class="owner-next-code-button" mat-raised-button (click)="callNext($event)">NEXT</button>
+        <button class="owner-next-code-button" mat-raised-button (click)="callNext($event)" [disabled]="!currentCode?.code && remainingCodesCount == 0">{{buttonStatus}}</button>
     </div>
 </div>
