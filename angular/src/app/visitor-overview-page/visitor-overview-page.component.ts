@@ -21,12 +21,16 @@ export class VisitorOverviewPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // 1. Get uuid
+    // Get uuid
     const uuid = {uuid: ''};
     uuid.uuid = this.localStorageService.getUuid();
-    // 2. Get code
+    // Get code
     //TODO: change backend to return just eto and not cto
     this.visitorCodeSub = this.accessCodeService.getCodeByUuid(uuid).subscribe(content => this.visitorCode = content['accessCode']);
+  }
+
+  refreshVisitorCode(event) {
+    this.visitorCode = event;
   }
 
   ngOnDestroy() {

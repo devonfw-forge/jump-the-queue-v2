@@ -18,3 +18,12 @@
         <span class="estimated-time">You are called</span>
     </div>
 </div>
+
+<div *ngIf="visitorCode && visitorCode.status == 'ATTENDED'" class="visitor-estimated-time-container">
+    <div class="estimated-time-container">
+        <span class="estimated-time">Your ticket has expired</span>
+    </div>
+    <div class="button-container">
+        <button class="visitor-new-code-button" mat-raised-button (click)="getNewCode($event)">NEW TICKET</button>
+    </div>
+</div>
