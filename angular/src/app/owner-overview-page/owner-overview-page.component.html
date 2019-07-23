@@ -1,7 +1,7 @@
 <div *ngIf="queue" class="owner-overview-page-container">
     <div class="queueLogoContainer">
         <app-queue-logo></app-queue-logo>
-        <button class="logout-button" mat-button (click)="return;">Log out</button>
+        <button class="logout-button" mat-button (click)="onLogout()">Log out</button>
     </div>
     <div class="started-queue-container" *ngIf="queue.started; else startQueueButton">
         <app-owner-current-code [currentCode]="currentCode"></app-owner-current-code>

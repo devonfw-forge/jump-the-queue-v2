@@ -7,11 +7,11 @@ import { OwnerOverviewPageComponent } from '../app/owner-overview-page/owner-ove
 import { AuthGuardService } from './core/auth-guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/my-code', pathMatch: 'full' }, // change redirect to login, test purposes atm
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
   { path: 'my-code', component: VisitorOverviewPageComponent },
-  { path: 'owner', component: OwnerOverviewPageComponent, /* canActivate: [AuthGuardService] */ },
-  { path: '**', component: VisitorOverviewPageComponent } // change component to some pagenotfoundcomponent, test purposes atm
+  { path: 'owner', component: OwnerOverviewPageComponent, canActivate: [AuthGuardService] },
+  { path: '**', component: LoginPageComponent }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

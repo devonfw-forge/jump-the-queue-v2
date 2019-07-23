@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { QueueService } from './../shared/services/queue.service';
+import { LoginService } from '../login-page/services/login.service';
 import { AccessCodeService } from './../shared/services/access-code.service';
 import { Queue, AccessCode } from './../shared/backendModels/interfaces';
 import { Subscription } from 'rxjs';
@@ -15,7 +16,11 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
   private currentCode: AccessCode;
   private codeSub: Subscription;
 
-  constructor(private queueService: QueueService, private accessCodeService: AccessCodeService) { }
+  constructor(
+    private queueService: QueueService,
+    private accessCodeService: AccessCodeService,
+    private loginService: LoginService
+  ) { }
 
   ngOnInit() {
     this.queueSub = this.queueService.getTodaysQueue().subscribe(queue => {
@@ -34,6 +39,10 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
 
   refreshCurrentCode(event: AccessCode) {
     this.currentCode = event;
+  }
+
+  onLogout() {
+    this.loginService.logout();
   }
 
   ngOnDestroy() {
