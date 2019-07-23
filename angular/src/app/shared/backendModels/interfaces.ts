@@ -20,7 +20,13 @@ export class AccessCode {
     queueId: number;
 }
 
-export class Owner {}
+export class Owner {
+    id: number;
+    modificationCounter: number;
+    username: string;
+    password: string;
+    userType: boolean;
+}
 
 export class EstimatedTime {
     miliseconds: number;

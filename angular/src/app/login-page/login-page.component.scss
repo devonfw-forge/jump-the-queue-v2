@@ -16,12 +16,15 @@
         flex: 3;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        .fields {
+            max-width: 300px;
+        }
     }
     .button-container {
         flex: 4;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         .button-login {
             width: 150px;

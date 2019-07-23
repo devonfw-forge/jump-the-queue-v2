@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { QueueService } from './../shared/services/queue.service';
-import { LoginService } from '../login-page/services/login.service';
-import { AccessCodeService } from './../shared/services/access-code.service';
-import { Queue, AccessCode } from './../shared/backendModels/interfaces';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { LoginService } from '../login-page/services/login.service';
+import { AccessCode, Queue } from './../shared/backendModels/interfaces';
+import { AccessCodeService } from './../shared/services/access-code.service';
+import { QueueService } from './../shared/services/queue.service';
 
 @Component({
   selector: 'app-owner-overview-page',

@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { AccessCodeService } from 'src/app/shared/services/access-code.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AccessCode } from 'src/app/shared/backendModels/interfaces';
+import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 
 @Component({
   selector: 'app-owner-next-code',
@@ -46,7 +46,7 @@ private buttonStatus: string;
   }
 
   ngOnDestroy() {
-    this.nextCodeSub.unsubscribe();
     this.remainingCodesCountSub.unsubscribe();
+    if (this.nextCodeSub) this.nextCodeSub.unsubscribe();
   }
 }

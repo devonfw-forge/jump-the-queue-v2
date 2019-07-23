@@ -4,7 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
+  private username: string;
   private logged = false;
+
   constructor() { }
 
   public isLogged(): boolean {
@@ -14,4 +16,13 @@ export class AuthService {
   public setLogged(login: boolean): void {
     this.logged = login;
   }
+
+  public getUsername(): string {
+    return this.username;
+  }
+
+  public setUsername(username: string) {
+    this.username = username;
+  }
+  
 }
