@@ -1,5 +1,6 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.impl.usecase;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,8 +17,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
@@ -27,6 +31,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedT
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
+import com.devonfw.application.jtqj.accesscodemanagement.service.impl.rest.ServerSse;
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
@@ -109,6 +114,19 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 			// Remove above code from remaining codes
 			nextCodeCto.getRemainingCodes().setRemainingCodes(nextCodeCto.getRemainingCodes().getRemainingCodes() - 1);
 		}
+		// SSE
+        List<SseEmitter> sseEmitterListToRemove = new ArrayList<>();
+        ServerSse.emitters.forEach((SseEmitter emitter) -> {
+            try {
+                emitter.send(nextCodeCto.getAccessCode(), MediaType.APPLICATION_JSON);
+            } catch (IOException e) {
+                emitter.complete();
+                sseEmitterListToRemove.add(emitter);
+                LOG.error(e.toString());
+            }
+        });
+        ServerSse.emitters.removeAll(sseEmitterListToRemove);
+
 		return nextCodeCto;
 	}
 
