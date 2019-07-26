@@ -1,5 +1,6 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.impl.usecase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +15,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
@@ -27,6 +30,7 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.RemainingC
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.Uuid;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
+import com.devonfw.application.jtqj.accesscodemanagement.service.impl.rest.ServerSse;
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
@@ -113,6 +117,19 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 			}
 			AccessCodeEto savedCode = accessCodeManagement.saveAccessCode(newCode);
 			visitorCode.setAccessCode(savedCode);
+
+			// SSE that a new code is in the queue
+	        List<SseEmitter> sseEmitterListToRemove = new ArrayList<>();
+	        ServerSse.emitters.forEach((SseEmitter emitter) -> {
+	            try {
+	            	emitter.send(SseEmitter.event().data(savedCode, MediaType.APPLICATION_JSON).name("NEW_CODE_ADDED"));
+	            } catch (IOException e) {
+	                emitter.complete();
+	                sseEmitterListToRemove.add(emitter);
+	                LOG.error(e.toString());
+	            }
+	        });
+	        ServerSse.emitters.removeAll(sseEmitterListToRemove);
 		} else {
 			visitorCode.setAccessCode(getBeanMapper().map(codes.getContent().get(0), AccessCodeEto.class));
 			visitorCode.setQueue(dailyQueue);
