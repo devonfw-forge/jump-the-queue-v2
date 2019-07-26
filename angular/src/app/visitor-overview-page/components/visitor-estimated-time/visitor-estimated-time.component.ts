@@ -3,6 +3,7 @@ import { AccessCode, EstimatedTime } from 'src/app/shared/backendModels/interfac
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { Status } from 'src/app/shared/backendModels/enums';
 
 @Component({
   selector: 'app-visitor-estimated-time',
@@ -12,6 +13,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy, OnChanges {
   @Output() updateVisitorCode = new EventEmitter();
   @Input() visitorCode: AccessCode;
+  @Input() currentCode: AccessCode;
   private estimatedTimeSub: Subscription;
   private estimated: EstimatedTime = new EstimatedTime();
   private visitorCodeSub: Subscription;
@@ -25,12 +27,18 @@ export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy, OnChang
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.visitorCode.currentValue) {
+    if ((changes.visitorCode && changes.visitorCode.currentValue) || (changes.currentCode && !changes.currentCode.firstChange)) {
       this.estimatedTimeSub = this.accessCodeService.getEstimatedTimeByCode(this.visitorCode).subscribe(estimated => {
         this.estimated.defaultTimeByUserInMs = estimated.defaultTimeByUserInMs;
         this.estimated.miliseconds = estimated.miliseconds;
       });
     }
+    if (this.visitorCode && changes.currentCode && changes.currentCode.previousValue &&
+       this.visitorCode.code === changes.currentCode.previousValue.code &&
+       this.visitorCode.code !== changes.currentCode.currentValue.code) {
+          // TODO: refactor this
+          this.visitorCode.status = Status.Attended;
+       }
   }
 
   getNewCode() {

@@ -23,7 +23,7 @@ export class LocalStorageService {
     return value;
   }
 
-  renewUuid() {
+  renewUuid(): string {
     localStorage.removeItem(this.storageKey);
     return this.getUuid();
   }

@@ -6,9 +6,9 @@
         <app-visitor-code [visitorCode]="visitorCode"></app-visitor-code>
     </div>
     <div class="estimatedTimeContainer">
-        <app-visitor-estimated-time [visitorCode]="visitorCode" (updateVisitorCode)="refreshVisitorCode($event)"></app-visitor-estimated-time>
+        <app-visitor-estimated-time [currentCode]="currentCode" [visitorCode]="visitorCode" (updateVisitorCode)="refreshVisitorCode($event)"></app-visitor-estimated-time>
     </div>
     <div class="currentCodeContainer">
-        <app-visitor-current-code></app-visitor-current-code>
+        <app-visitor-current-code (updateCurrentCode)="refreshCurrentCode($event)"></app-visitor-current-code>
     </div>
 </div>

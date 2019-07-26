@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 import { QueueService } from 'src/app/shared/services/queue.service';
 import { AccessCode, Queue } from 'src/app/shared/backendModels/interfaces';
 import { Subscription } from 'rxjs';
+import { ServerSideEventsService } from 'src/app/shared/services/server-side-events.service';
 
 @Component({
   selector: 'app-visitor-current-code',
@@ -10,6 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./visitor-current-code.component.scss']
 })
 export class VisitorCurrentCodeComponent implements OnInit, OnDestroy {
+  @Output() updateCurrentCode = new EventEmitter();
   private currentCode: AccessCode;
   private currentCodeSub: Subscription;
   private queue: Queue;
@@ -17,7 +19,8 @@ export class VisitorCurrentCodeComponent implements OnInit, OnDestroy {
 
   constructor(
     private accessCodeService: AccessCodeService,
-    private queueService: QueueService
+    private queueService: QueueService,
+    private serverSideEventsService: ServerSideEventsService
     ) { }
 
   ngOnInit() {
@@ -25,9 +28,23 @@ export class VisitorCurrentCodeComponent implements OnInit, OnDestroy {
     this.queueSub = this.queueService.getTodaysQueue().subscribe(queue => {
       this.queue = queue;
       if (this.queue.started) {
-        this.currentCodeSub = this.accessCodeService.getCurrentCode(this.queue).subscribe(
-          currentCode => this.currentCode = currentCode
-        );
+        this.currentCodeSub = this.accessCodeService.getCurrentCode(this.queue).subscribe(code => {
+          this.currentCode = code;
+          // Subscribe to SSE
+          const source = this.serverSideEventsService.getStream();
+          source.addEventListener('CURRENT_CODE_CHANGED', (data: any) => {
+            let parsedCode = new AccessCode();
+            parsedCode = JSON.parse(data.data);
+            this.updateCurrentCode.emit(parsedCode);
+            this.currentCode = parsedCode;
+          });
+          source.addEventListener('CURRENT_CODE_CHANGED_NULL', (data: any) => {
+            let parsedCode = new AccessCode();
+            parsedCode = JSON.parse(data.data);
+            this.updateCurrentCode.emit(parsedCode);
+            this.currentCode = parsedCode;
+          });
+        });
       }
     });
   }

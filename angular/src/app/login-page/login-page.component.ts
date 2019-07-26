@@ -13,6 +13,8 @@ export class LoginPageComponent implements OnInit {
   constructor(private loginService: LoginService) { }
 
   ngOnInit() {
+    this.username = 'adcenter';
+    this.password = 'adcenter';
   }
 
   onLogin() {

@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Subscription } from 'rxjs';
 import { AccessCode } from 'src/app/shared/backendModels/interfaces';
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
+import { ServerSideEventsService } from 'src/app/shared/services/server-side-events.service';
+import { Status } from 'src/app/shared/backendModels/enums';
 
 @Component({
   selector: 'app-owner-next-code',
@@ -16,7 +18,10 @@ private remainingCodesCount: number;
 private remainingCodesCountSub: Subscription;
 private buttonStatus: string;
 
-  constructor(private accessCodeService: AccessCodeService) { }
+  constructor(
+    private accessCodeService: AccessCodeService,
+    private serverSideEventsService: ServerSideEventsService
+    ) { }
 
   ngOnInit() {
     this.remainingCodesCountSub = this.accessCodeService.getRemainingCodesCount().subscribe(v => {
@@ -28,6 +33,14 @@ private buttonStatus: string;
       } else {
         this.buttonStatus = 'Call Next';
       }
+    });
+    // Subscribe to SSE
+    // TODO: do i need 1 stream for all? fix method name and url in backend if so
+    const source = this.serverSideEventsService.getStream();
+    source.addEventListener('NEW_CODE_ADDED', (data: any) => {
+      let parsedCode = new AccessCode();
+      parsedCode = JSON.parse(data.data);
+      if (parsedCode.status === Status.Waiting) this.remainingCodesCount++;
     });
   }
 

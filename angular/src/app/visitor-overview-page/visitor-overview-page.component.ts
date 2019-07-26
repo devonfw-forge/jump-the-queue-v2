@@ -11,8 +11,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./visitor-overview-page.component.scss']
 })
 export class VisitorOverviewPageComponent implements OnInit, OnDestroy {
+  private currentCode: AccessCode;
   private visitorCode: AccessCode;
   private visitorCodeSub: Subscription;
+  private currentCodeSub: Subscription;
 
   constructor(
     private queueService: QueueService,
@@ -26,14 +28,21 @@ export class VisitorOverviewPageComponent implements OnInit, OnDestroy {
     uuid.uuid = this.localStorageService.getUuid();
     // Get code
     //TODO: change backend to return just eto and not cto
-    this.visitorCodeSub = this.accessCodeService.getCodeByUuid(uuid).subscribe(content => this.visitorCode = content['accessCode']);
+    this.visitorCodeSub = this.accessCodeService.getCodeByUuid(uuid).subscribe(content => {
+      this.visitorCode = content['accessCode'];
+    });
   }
 
   refreshVisitorCode(event) {
     this.visitorCode = event;
   }
 
+  refreshCurrentCode(event) {
+    this.currentCode = event;
+  }
+
   ngOnDestroy() {
     this.visitorCodeSub.unsubscribe();
+    // this.currentCodeSub.unsubscribe();
   }
 }
