@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
@@ -114,11 +115,15 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 			// Remove above code from remaining codes
 			nextCodeCto.getRemainingCodes().setRemainingCodes(nextCodeCto.getRemainingCodes().getRemainingCodes() - 1);
 		}
-		// SSE
+		// SSE  TODO: Refactor this SSE
         List<SseEmitter> sseEmitterListToRemove = new ArrayList<>();
         ServerSse.emitters.forEach((SseEmitter emitter) -> {
             try {
-                emitter.send(nextCodeCto.getAccessCode(), MediaType.APPLICATION_JSON);
+            	if (nextCodeCto.getAccessCode() != null) {
+            		emitter.send(SseEmitter.event().data(nextCodeCto.getAccessCode(), MediaType.APPLICATION_JSON).name("CURRENT_CODE_CHANGED"));
+            	} else {
+            		emitter.send(SseEmitter.event().data(new AccessCodeEto(), MediaType.APPLICATION_JSON).name("CURRENT_CODE_CHANGED_NULL"));
+            	}
             } catch (IOException e) {
                 emitter.complete();
                 sseEmitterListToRemove.add(emitter);
