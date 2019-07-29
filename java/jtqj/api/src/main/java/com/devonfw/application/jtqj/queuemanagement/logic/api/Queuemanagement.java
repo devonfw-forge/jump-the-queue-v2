@@ -1,6 +1,5 @@
 package com.devonfw.application.jtqj.queuemanagement.logic.api;
 
-import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.usecase.UcFindQueue;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.usecase.UcManageQueue;
 

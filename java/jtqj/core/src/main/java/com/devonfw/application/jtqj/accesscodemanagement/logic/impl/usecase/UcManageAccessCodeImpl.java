@@ -9,23 +9,18 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
-import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
@@ -35,7 +30,6 @@ import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.Abst
 import com.devonfw.application.jtqj.accesscodemanagement.service.impl.rest.ServerSse;
 import com.devonfw.application.jtqj.general.common.api.Status;
 import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
-import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
 
 /**
  * Use case implementation for modifying and deleting AccessCodes

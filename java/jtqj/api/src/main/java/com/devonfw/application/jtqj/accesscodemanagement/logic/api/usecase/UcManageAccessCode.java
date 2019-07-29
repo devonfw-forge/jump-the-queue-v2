@@ -1,7 +1,5 @@
 package com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase;
 
-import java.util.List;
-
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.EstimatedTime;
 import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.NextCodeCto;
