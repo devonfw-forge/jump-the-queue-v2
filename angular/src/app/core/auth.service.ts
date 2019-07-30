@@ -24,5 +24,5 @@ export class AuthService {
   public setUsername(username: string) {
     this.username = username;
   }
-  
+
 }

@@ -36,7 +36,6 @@ export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy, OnChang
     if (this.visitorCode && changes.currentCode && changes.currentCode.previousValue &&
        this.visitorCode.code === changes.currentCode.previousValue.code &&
        this.visitorCode.code !== changes.currentCode.currentValue.code) {
-          // TODO: refactor this
           this.visitorCode.status = Status.Attended;
        }
   }

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class QueueService {
 
-    private baseUrl = environment.baseUrlRestServices;
+  private baseUrl = environment.baseUrlRestServices;
 
   constructor(private http: HttpClient) {}
 

@@ -26,7 +26,7 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
     this.queueSub = this.queueService.getTodaysQueue().subscribe(queue => {
       this.queue = queue;
       if (this.queue.started) {
-        this.codeSub = this.accessCodeService.getCurrentCode(this.queue).subscribe(code => {
+        this.codeSub = this.accessCodeService.getCurrentCode().subscribe(code => {
           this.currentCode = code;
         });
       }
@@ -46,7 +46,6 @@ export class OwnerOverviewPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // TODO: Check this cause is not firing on destroy
     this.queueSub.unsubscribe();
     this.codeSub.unsubscribe();
   }

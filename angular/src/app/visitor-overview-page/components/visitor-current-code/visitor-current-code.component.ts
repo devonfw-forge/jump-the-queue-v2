@@ -4,6 +4,7 @@ import { QueueService } from 'src/app/shared/services/queue.service';
 import { AccessCode, Queue } from 'src/app/shared/backendModels/interfaces';
 import { Subscription } from 'rxjs';
 import { ServerSideEventsService } from 'src/app/shared/services/server-side-events.service';
+import { SseTopic } from 'src/app/shared/backendModels/enums';
 
 @Component({
   selector: 'app-visitor-current-code',
@@ -24,28 +25,40 @@ export class VisitorCurrentCodeComponent implements OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
-    //TODO: change backend so currentCore endpoint does not require todays queue
     this.queueSub = this.queueService.getTodaysQueue().subscribe(queue => {
+      const source = this.serverSideEventsService.getStream();
       this.queue = queue;
       if (this.queue.started) {
-        this.currentCodeSub = this.accessCodeService.getCurrentCode(this.queue).subscribe(code => {
+        this.currentCodeSub = this.accessCodeService.getCurrentCode().subscribe(code => {
           this.currentCode = code;
-          // Subscribe to SSE
-          const source = this.serverSideEventsService.getStream();
-          source.addEventListener('CURRENT_CODE_CHANGED', (data: any) => {
-            let parsedCode = new AccessCode();
-            parsedCode = JSON.parse(data.data);
-            this.updateCurrentCode.emit(parsedCode);
-            this.currentCode = parsedCode;
-          });
-          source.addEventListener('CURRENT_CODE_CHANGED_NULL', (data: any) => {
-            let parsedCode = new AccessCode();
-            parsedCode = JSON.parse(data.data);
-            this.updateCurrentCode.emit(parsedCode);
-            this.currentCode = parsedCode;
-          });
+          this.subscribeAccessCodeSseTopics(source);
+        });
+      } else {
+        source.addEventListener(SseTopic.QUEUE_STARTED, (data: any) => {
+          let parsedQueue = new Queue();
+          parsedQueue = JSON.parse(data.data);
+          this.queue = parsedQueue;
+        });
+        this.currentCodeSub = this.accessCodeService.getCurrentCode().subscribe(code => {
+          this.currentCode = code;
+          this.subscribeAccessCodeSseTopics(source);
         });
       }
+    });
+  }
+
+  subscribeAccessCodeSseTopics(source: EventSource) {
+    source.addEventListener(SseTopic.CURRENT_CODE_CHANGED, (data: any) => {
+      let parsedCode = new AccessCode();
+      parsedCode = JSON.parse(data.data);
+      this.updateCurrentCode.emit(parsedCode);
+      this.currentCode = parsedCode;
+    });
+    source.addEventListener(SseTopic.CURRENT_CODE_CHANGED_NULL, (data: any) => {
+      let parsedCode = new AccessCode();
+      parsedCode = JSON.parse(data.data);
+      this.updateCurrentCode.emit(parsedCode);
+      this.currentCode = parsedCode;
     });
   }
 

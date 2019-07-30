@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AccessCode, EstimatedTime, NextCodeCto, RemainingCodes } from './../backendModels/interfaces';
-import { Queue } from '../backendModels/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +13,8 @@ export class AccessCodeService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentCode(queue: Queue): Observable<AccessCode> {
-    return this.http.post<AccessCode>(this.baseUrl + 'accesscodemanagement/v1/accesscode/current', queue);
+  getCurrentCode(): Observable<AccessCode> {
+    return this.http.post<AccessCode>(this.baseUrl + 'accesscodemanagement/v1/accesscode/current', {});
   }
 
   callNextCode(): Observable<NextCodeCto> {

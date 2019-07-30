@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div *ngIf="estimated?.miliseconds != 0 && estimated?.miliseconds == estimated?.defaultTimeByUserInMs" class="visitor-estimated-time-container">
+<div *ngIf="(visitorCode && visitorCode.status == 'WAITING') && estimated?.miliseconds != 0 && estimated?.miliseconds == estimated?.defaultTimeByUserInMs" class="visitor-estimated-time-container">
     <div class="estimated-time-container">
         <span class="estimated-time">You will be attended soon</span>
     </div>

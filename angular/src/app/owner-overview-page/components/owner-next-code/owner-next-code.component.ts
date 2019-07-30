@@ -34,13 +34,14 @@ private buttonStatus: string;
         this.buttonStatus = 'Call Next';
       }
     });
-    // Subscribe to SSE
-    // TODO: do i need 1 stream for all? fix method name and url in backend if so
     const source = this.serverSideEventsService.getStream();
     source.addEventListener('NEW_CODE_ADDED', (data: any) => {
       let parsedCode = new AccessCode();
       parsedCode = JSON.parse(data.data);
-      if (parsedCode.status === Status.Waiting) this.remainingCodesCount++;
+      if (parsedCode.status === Status.Waiting) {
+        this.remainingCodesCount++;
+        this.buttonStatus = 'Call Next';
+      }
     });
   }
 
