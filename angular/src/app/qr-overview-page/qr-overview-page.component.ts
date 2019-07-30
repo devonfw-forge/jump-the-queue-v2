@@ -7,9 +7,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./qr-overview-page.component.scss']
 })
 export class QrOverviewPageComponent implements OnInit {
-  public myAngularxQrCode: string;
+  private myAngularxQrCode: string;
+  private host: string;
+  private hostname: string;
+  private origin: string;
   constructor() {
     this.myAngularxQrCode = environment.qrUrl;
+    this.host = window.location.host;
+    this.hostname = window.location.hostname;
+    this.origin = window.location.origin;
   }
 
   ngOnInit() {

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerSideEventsService {
 
-  private currentCodeStreamUrl = 'http://localhost:8081/stream/subscribe';
+  private streamUrl = environment.streamUrl;
   constructor() { }
 
   getStream(): EventSource {
-    return new EventSource(this.currentCodeStreamUrl);
+    return new EventSource(this.streamUrl);
   }
 }
