@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnDestroy, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
-import { AccessCode, EstimatedTime } from 'src/app/shared/backendModels/interfaces';
+import { Component, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { AccessCode, EstimatedTime, CodeUuid } from 'src/app/shared/backendModels/interfaces';
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -10,7 +10,7 @@ import { Status } from 'src/app/shared/backendModels/enums';
   templateUrl: './visitor-estimated-time.component.html',
   styleUrls: ['./visitor-estimated-time.component.scss']
 })
-export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy, OnChanges {
+export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy {
   @Output() updateVisitorCode = new EventEmitter();
   @Input() visitorCode: AccessCode;
   @Input() currentCode: AccessCode;
@@ -24,26 +24,17 @@ export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy, OnChang
   ) {}
 
   ngOnInit() {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if ((changes.visitorCode && changes.visitorCode.currentValue) || (changes.currentCode && !changes.currentCode.firstChange)) {
-      this.estimatedTimeSub = this.accessCodeService.getEstimatedTimeByCode(this.visitorCode).subscribe(estimated => {
-        this.estimated.defaultTimeByUserInMs = estimated.defaultTimeByUserInMs;
-        this.estimated.miliseconds = estimated.miliseconds;
+    if (this.visitorCode && this.visitorCode.status === Status.Waiting) {
+      this.estimatedTimeSub = this.accessCodeService.getEstimatedTimeByCode(this.visitorCode).subscribe(estimatedTimeResponse => {
+        this.estimated = estimatedTimeResponse;
       });
     }
-    if (this.visitorCode && changes.currentCode && changes.currentCode.previousValue &&
-       this.visitorCode.code === changes.currentCode.previousValue.code &&
-       this.visitorCode.code !== changes.currentCode.currentValue.code) {
-          this.visitorCode.status = Status.Attended;
-       }
   }
 
   getNewCode() {
-    const uuid = { uuid: '' };
-    uuid.uuid = this.localStorageService.renewUuid();
-    this.visitorCodeSub = this.accessCodeService.getCodeByUuid(uuid).subscribe(content =>
+    const codeUuid = new CodeUuid();
+    codeUuid.uuid = this.localStorageService.renewUuid();
+    this.visitorCodeSub = this.accessCodeService.getCodeByUuid(codeUuid).subscribe(content =>
       this.updateVisitorCode.emit(content['accessCode'])
     );
   }

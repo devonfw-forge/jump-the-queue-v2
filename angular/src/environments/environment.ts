@@ -5,9 +5,8 @@
 export const environment = {
   production: false,
   baseUrlRestServices: 'http://localhost:8081/services/rest/',
-  qrUrl: 'http://localhost:4200/qr',
-  localStorageUuidKey: 'jtquuid',
-  serverPollingInterval: 3000
+  qrUrl: 'http://localhost:4200/my-code',
+  localStorageUuidKey: 'jtquuid'
 };
 
 /*

@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div *ngIf="(visitorCode && visitorCode.status == 'ATTENDING') || (currentCode && visitorCode && currentCode.code == visitorCode.code)" class="visitor-estimated-time-container">
+<div *ngIf="visitorCode && visitorCode.status == 'ATTENDING'" class="visitor-estimated-time-container">
     <div class="estimated-time-container">
         <span class="estimated-time">You are called</span>
     </div>

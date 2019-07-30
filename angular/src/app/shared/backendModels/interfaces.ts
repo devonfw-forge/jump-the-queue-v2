@@ -41,3 +41,7 @@ export class NextCodeCto {
     accessCode: AccessCode;
     remainingCodes: RemainingCodes;
 }
+
+export class CodeUuid {
+    uuid: string;
+}
