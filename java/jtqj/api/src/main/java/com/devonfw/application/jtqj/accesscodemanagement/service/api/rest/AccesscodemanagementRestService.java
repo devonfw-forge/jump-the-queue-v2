@@ -113,12 +113,11 @@ public interface AccesscodemanagementRestService {
 	/**
 	 * Delegates to {@link Accesscodemanagement#findCurrentCode}.
 	 *
-	 * @param queue associated for current code
 	 * @return the current accessCode if available{@link AccessCodeEto}.
 	 */
 	@Path("/accesscode/current")
 	@POST
-	public AccessCodeEto findCurrentCode(QueueEto queue);
+	public AccessCodeEto findCurrentCode();
 
 	/**
 	 * Delegates to {@link Accesscodemanagement#calculateEstimatedTime}.

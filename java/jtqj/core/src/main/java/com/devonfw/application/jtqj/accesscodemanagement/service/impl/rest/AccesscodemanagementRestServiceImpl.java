@@ -67,8 +67,8 @@ public class AccesscodemanagementRestServiceImpl implements Accesscodemanagement
 	}
 
 	@Override
-	public AccessCodeEto findCurrentCode(QueueEto queue) {
-		return this.accesscodemanagement.findCurrentCode(queue.getId());
+	public AccessCodeEto findCurrentCode() {
+		return this.accesscodemanagement.findCurrentCode();
 	}
 
 	@Override

@@ -92,7 +92,7 @@ public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcMa
 		long dailyQueueId = queueManagement.findDailyQueue().getId();
 
 		// Check if we have current code being attended
-		AccessCodeEto currentCode = accessCodeManagement.findCurrentCode(dailyQueueId);
+		AccessCodeEto currentCode = accessCodeManagement.findCurrentCode();
 		if (currentCode.getStatus() == Status.ATTENDING) {
 			// Update current code
 			currentCode.setStatus(Status.ATTENDED);

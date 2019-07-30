@@ -193,10 +193,11 @@ public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFind
 	}
 
 	@Override
-	public AccessCodeEto findCurrentCode(long queueId) {
+	public AccessCodeEto findCurrentCode() {
+		QueueEto dailyQueue = queueManagement.findDailyQueue();
 		AccessCodeEto currentCode = new AccessCodeEto();
 		AccessCodeSearchCriteriaTo criteria = new AccessCodeSearchCriteriaTo();
-		criteria.setQueueId(queueId);
+		criteria.setQueueId(dailyQueue.getId());
 		criteria.setStatus(Status.ATTENDING);
 		Page<AccessCodeEntity> accessCode = getAccessCodeRepository().findByCriteria(criteria);
 		// Check if we have a current code
