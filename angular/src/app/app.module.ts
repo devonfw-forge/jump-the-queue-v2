@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { QRCodeModule } from 'angularx-qrcode';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { AccessCodeService } from './shared/services/access-code.service';
 import { QueueService } from './shared/services/queue.service';
 import { LocalStorageService } from './visitor-overview-page/services/local-storage.service';
 import { VisitorEstimatedTimeComponent } from './visitor-overview-page/components/visitor-estimated-time/visitor-estimated-time.component';
+import { QrOverviewPageComponent } from './qr-overview-page/qr-overview-page.component';
 
 @NgModule({
   declarations: [
@@ -29,12 +31,14 @@ import { VisitorEstimatedTimeComponent } from './visitor-overview-page/component
     OwnerCurrentCodeComponent,
     OwnerNextCodeComponent,
     StartQueueComponent,
-    VisitorEstimatedTimeComponent
+    VisitorEstimatedTimeComponent,
+    QrOverviewPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    QRCodeModule
   ],
   providers: [
     AccessCodeService,
