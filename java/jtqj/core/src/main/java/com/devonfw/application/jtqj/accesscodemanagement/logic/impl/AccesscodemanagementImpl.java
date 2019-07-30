@@ -87,8 +87,8 @@ public class AccesscodemanagementImpl extends AbstractComponentFacade implements
 	}
 
 	@Override
-	public AccessCodeEto findCurrentCode(long queueId) {
-		return this.ucFindAccessCode.findCurrentCode(queueId);
+	public AccessCodeEto findCurrentCode() {
+		return this.ucFindAccessCode.findCurrentCode();
 	}
 
 	@Override

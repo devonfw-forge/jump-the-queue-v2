@@ -65,10 +65,9 @@ public interface UcFindAccessCode {
 	/**
 	 * Returns a current AccessCode of dailyQueue.
 	 *
-	 * @param id The id 'id' of the dailyQueue.
 	 * @return The {@link AccessCodeEto} with status Attending
 	 */
-	AccessCodeEto findCurrentCode(long queueId);
+	AccessCodeEto findCurrentCode();
 
 	/**
 	 * Returns a next AccessCode of dailyQueue.
