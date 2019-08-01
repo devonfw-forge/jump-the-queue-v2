@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, OnDestroy, OnChanges } from '@angular/core';
 import { AccessCode, EstimatedTime, CodeUuid } from 'src/app/shared/backendModels/interfaces';
 import { AccessCodeService } from 'src/app/shared/services/access-code.service';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { Status } from 'src/app/shared/backendModels/enums';
   templateUrl: './visitor-estimated-time.component.html',
   styleUrls: ['./visitor-estimated-time.component.scss']
 })
-export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy {
+export class VisitorEstimatedTimeComponent implements OnInit, OnChanges, OnDestroy {
   @Output() updateVisitorCode = new EventEmitter();
   @Input() visitorCode: AccessCode;
   @Input() currentCode: AccessCode;
@@ -24,6 +24,14 @@ export class VisitorEstimatedTimeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    if (this.visitorCode && this.visitorCode.status === Status.Waiting) {
+      this.estimatedTimeSub = this.accessCodeService.getEstimatedTimeByCode(this.visitorCode).subscribe(estimatedTimeResponse => {
+        this.estimated = estimatedTimeResponse;
+      });
+    }
+  }
+
+  ngOnChanges() {
     if (this.visitorCode && this.visitorCode.status === Status.Waiting) {
       this.estimatedTimeSub = this.accessCodeService.getEstimatedTimeByCode(this.visitorCode).subscribe(estimatedTimeResponse => {
         this.estimated = estimatedTimeResponse;
