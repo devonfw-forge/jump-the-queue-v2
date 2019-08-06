@@ -34,3 +34,8 @@ java/jtqj/core/.jtqj.trace.db
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /.metadata/
+
+# Python & Django #
+__pycache__/
+*.pyc
+db.sqlite3
