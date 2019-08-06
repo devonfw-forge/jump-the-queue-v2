@@ -29,48 +29,29 @@ def daily_queue(request):
         except Queue.MultipleObjectsReturned:
             return HttpResponse(status=500)
 
+@api_view(['POST'])
+def queue_start(request):
+    """
+    Given a queue will change it to started
+    """
+    if request.method == 'POST':
+        queue = JSONParser().parse(request)
+        try:
+            queue = Queue.objects.get(pk=queue['id'])
+            queue.started = True
+            queue.modificationCounter += 1
+            queue.save()
+            newSerializer = QueueSerializer(queue)
+            return JsonResponse(newSerializer.data, status=200)
+        except Queue.DoesNotExist:
+            return HttpResponse(status=404)
 
 @csrf_exempt
 def queue_list(request):
     """
-    List all code snippets, or create a new snippet.
+    List all queues
     """
     if request.method == 'GET':
         queues = Queue.objects.all()
         serializer = QueueSerializer(queues, many=True)
         return JsonResponse(serializer.data, safe=False)
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = QueueSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-@csrf_exempt
-def queue_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        queue = Queue.objects.get(pk=pk)
-    except Queue.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = QueueSerializer(snippet)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        queue = QueueSerializer(snippet, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        queue.delete()
-        return HttpResponse(status=204)
-
