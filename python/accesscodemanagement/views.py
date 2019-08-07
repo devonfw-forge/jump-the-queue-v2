@@ -39,6 +39,13 @@ def accesscode_by_uuid(request):
             newVisitorCodeSerializer = AccessCodeSerializer(newVisitorCode)
             return JsonResponse(newVisitorCodeSerializer.data, status=200)
 
+@api_view(['POST'])
+def accesscode_current(request):
+    todaysQueue = views.get_or_create_today_queue_serializer()
+    currentCode = AccessCode.objects.filter(queueId=todaysQueue.data['id'], status=AccessCodeStatus.ATTENDING.value).first()
+    currentCodeSerializer = AccessCodeSerializer(currentCode)
+    return JsonResponse(currentCodeSerializer.data, status=200)
+
 @csrf_exempt
 def accesscode_list(request):
     """
