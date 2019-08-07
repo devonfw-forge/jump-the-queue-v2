@@ -6,28 +6,29 @@ from queuemanagement.models import Queue
 from queuemanagement.serializers import QueueSerializer
 import datetime
 
+def get_or_create_today_queue_serializer():
+    """
+    Returns daily queue serializer if exists else create it and return
+    """
+    now = datetime.datetime.now()
+    try:
+        todaysQueue = Queue.objects.get(
+            createdDate__year=now.year,
+            createdDate__month=now.month,
+            createdDate__day=now.day
+            )
+        serializer = QueueSerializer(todaysQueue)
+        return serializer
+    except Queue.DoesNotExist:
+        newQueue = Queue()
+        newQueue.save()
+        newSerializer = QueueSerializer(newQueue)
+        return newSerializer
+
 @api_view(['GET'])
 def daily_queue(request):
-    """
-    Returns daily queue if exists else create it and return
-    """
-    if request.method == 'GET':
-        now = datetime.datetime.now()
-        try:
-            todaysQueue = Queue.objects.get(
-                    createdDate__year=now.year,
-                    createdDate__month=now.month,
-                    createdDate__day=now.day
-                    )
-            serializer = QueueSerializer(todaysQueue)
-            return JsonResponse(serializer.data, status=200)
-        except Queue.DoesNotExist:
-            newQueue = Queue()
-            newQueue.save()
-            newSerializer = QueueSerializer(newQueue)
-            return JsonResponse(newSerializer.data, status=201)
-        except Queue.MultipleObjectsReturned:
-            return HttpResponse(status=500)
+    serializer = get_or_create_today_queue_serializer()
+    return JsonResponse(serializer.data, status=200)
 
 @api_view(['POST'])
 def queue_start(request):
@@ -55,3 +56,11 @@ def queue_list(request):
         queues = Queue.objects.all()
         serializer = QueueSerializer(queues, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+
+
+
+
+
+

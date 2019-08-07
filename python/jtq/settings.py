@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'queuemanagement.apps.QueuemanagementConfig',
+    'accesscodemanagement.apps.AccesscodemanagementConfig',
 ]
 
 MIDDLEWARE = [
