@@ -21,8 +21,16 @@ def accesscode_by_uuid(request):
             return JsonResponse(accessCodeSerializer.data, status=200)
         except AccessCode.DoesNotExist:
             visitorCodeStatus = AccessCodeStatus.WAITING.value if todayQueueSerializer.data['started'] else AccessCodeStatus.NOTSTARTED.value
+            # Get last code
+            lastCode = 'Q001'
+            lastAccessCode = AccessCode.objects.filter(queueId=todayQueueSerializer.data['id']).first()
+            if lastAccessCode:
+                # Parse code & fix leading zeros
+                lastCode = lastAccessCode.code[0] + '{0:0>3}'.format(int(lastAccessCode.code[1:], 10) + 1)
+                # If Q1000 reset to Q001
+                lastCode = 'Q001' if len(lastCode) == 5 else lastCode
             newVisitorCode = AccessCode(
-                    code='K888',
+                    code=lastCode,
                     status=visitorCodeStatus,
                     uuid=request.data['uuid'],
                     queueId=todayQueueSerializer.instance
