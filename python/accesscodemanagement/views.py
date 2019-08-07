@@ -46,6 +46,19 @@ def accesscode_current(request):
     currentCodeSerializer = AccessCodeSerializer(currentCode)
     return JsonResponse(currentCodeSerializer.data, status=200)
 
+@api_view(['POST'])
+def accesscode_remaining(request):
+    """
+    Returns amount of codes are left to be attended
+    """
+    todaysQueue = views.get_or_create_today_queue_serializer()
+    amount = AccessCode.objects.filter(queueId=todaysQueue.data['id'], status=AccessCodeStatus.WAITING.value).count()
+    remainingCodes = {
+            'remainingCodes': amount
+    }
+    return JsonResponse(remainingCodes, status=200)
+
+
 @csrf_exempt
 def accesscode_list(request):
     """
