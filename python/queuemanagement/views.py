@@ -1,10 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import F
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from queuemanagement.models import Queue
 from queuemanagement.serializers import QueueSerializer
+from accesscodemanagement.models import AccessCode, AccessCodeStatus
 import datetime
+
 
 def get_or_create_today_queue_serializer():
     """
@@ -39,11 +42,16 @@ def queue_start(request):
         queue = JSONParser().parse(request)
         try:
             queue = Queue.objects.get(pk=queue['id'])
-            queue.started = True
-            queue.modificationCounter += 1
-            queue.save()
-            newSerializer = QueueSerializer(queue)
-            return JsonResponse(newSerializer.data, status=200)
+            if not queue.started:
+                queue.started = True
+                queue.modificationCounter += 1
+                queue.save()
+                # Update all codes associated with such queue
+                AccessCode.objects.filter(queueId=queue.id).update(status=AccessCodeStatus.WAITING.value, modificationCounter=F('modificationCounter')+1)
+                newSerializer = QueueSerializer(queue)
+                return JsonResponse(newSerializer.data, status=200)
+            else:
+                return HttpResponse(status=200)
         except Queue.DoesNotExist:
             return HttpResponse(status=404)
 
