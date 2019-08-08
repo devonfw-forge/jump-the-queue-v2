@@ -1,13 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.utils import timezone
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from accesscodemanagement.models import AccessCode, AccessCodeStatus
 from accesscodemanagement.serializers import AccessCodeSerializer
 from queuemanagement import views
 from queuemanagement.models import Queue
-import datetime
 
 @api_view(['POST'])
 def accesscode_by_uuid(request):
@@ -77,13 +77,13 @@ def accesscode_nextCode(request):
         if currentCode:
                 currentCode.modificationCounter += 1
                 currentCode.status = AccessCodeStatus.ATTENDED.value
-                currentCode.endTime = datetime.datetime.now()
+                currentCode.endTime = timezone.now()
                 currentCode.save()
         # Check if we have a nextCode & change
         nextCode = AccessCode.objects.filter(queueId=queueId, status=AccessCodeStatus.WAITING.value).first()
         if nextCode:
                 nextCode.status = AccessCodeStatus.ATTENDING.value
-                nextCode.startTime = datetime.datetime.now()
+                nextCode.startTime = timezone.now()
                 nextCode.modificationCounter += 1
                 nextCode.save()
                 # Get remaining codes

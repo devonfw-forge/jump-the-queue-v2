@@ -1,19 +1,20 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
+from django.utils import timezone
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from queuemanagement.models import Queue
 from queuemanagement.serializers import QueueSerializer
 from accesscodemanagement.models import AccessCode, AccessCodeStatus
-import datetime
+
 
 
 def get_or_create_today_queue_serializer():
     """
     Returns daily queue serializer if exists else create it and return
     """
-    now = datetime.datetime.now()
+    now = timezone.now()
     try:
         todaysQueue = Queue.objects.get(
             createdDate__year=now.year,
