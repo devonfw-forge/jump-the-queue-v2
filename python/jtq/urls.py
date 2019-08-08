@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('queuemanagement.urls')),
-    path('', include('accesscodemanagement.urls')),
+    path('services/rest/queuemanagement/v1/queue/', include('queuemanagement.urls')),
+    path('services/rest/accesscodemanagement/v1/accesscode/', include('accesscodemanagement.urls')),
+    path('services/rest/ownermanagement/v1/owner/', include('ownermanagement.urls')),
 ]

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'queuemanagement.apps.QueuemanagementConfig',
     'accesscodemanagement.apps.AccesscodemanagementConfig',
+    'ownermanagement.apps.OwnermanagementConfig',
 ]
 
 MIDDLEWARE = [

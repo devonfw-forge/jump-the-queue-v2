@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
@@ -16,8 +16,9 @@ def accesscode_by_uuid(request):
     """
     if request.method == 'POST':
         todayQueueSerializer = views.get_or_create_today_queue_serializer()
+        uuid = JSONParser().parse(request)
         try:
-            visitorCode = AccessCode.objects.get(uuid=request.data['uuid'], queueId=todayQueueSerializer.data['id'])
+            visitorCode = AccessCode.objects.get(uuid=uuid['uuid'], queueId=todayQueueSerializer.data['id'])
             accessCodeSerializer = AccessCodeSerializer(visitorCode)
             return JsonResponse(accessCodeSerializer.data, status=200)
         except AccessCode.DoesNotExist:
@@ -33,7 +34,7 @@ def accesscode_by_uuid(request):
             newVisitorCode = AccessCode(
                     code=lastCode,
                     status=visitorCodeStatus,
-                    uuid=request.data['uuid'],
+                    uuid=uuid['uuid'],
                     queueId=todayQueueSerializer.instance
                     )
             newVisitorCode.save()
