@@ -14,6 +14,10 @@ def owner_login(request):
         try:
             owner = Owner.objects.get(username=criteria['username'], password=criteria['password'])
             ownerSerializer = OwnerSerializer(owner)
-            return JsonResponse(ownerSerializer.data, status=200)
+            response = {
+                    "content" : []
+            }
+            response['content'].append(ownerSerializer.data)
+            return JsonResponse(response, status=200)
         except Owner.DoesNotExist:
             return HttpResponse(status=403)

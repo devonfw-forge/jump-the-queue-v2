@@ -16,10 +16,15 @@ def accesscode_by_uuid(request):
     if request.method == 'POST':
         todayQueueSerializer = views.get_or_create_today_queue_serializer()
         uuid = JSONParser().parse(request)
+        response = {
+                "accessCode" : {},
+                "queue": todayQueueSerializer.data
+        }
         try:
             visitorCode = AccessCode.objects.get(uuid=uuid['uuid'], queueId=todayQueueSerializer.data['id'])
             accessCodeSerializer = AccessCodeSerializer(visitorCode)
-            return JsonResponse(accessCodeSerializer.data, status=200)
+            response['accessCode'] = accessCodeSerializer.data
+            return JsonResponse(response, status=200)
         except AccessCode.DoesNotExist:
             visitorCodeStatus = AccessCodeStatus.WAITING.value if todayQueueSerializer.data['started'] else AccessCodeStatus.NOTSTARTED.value
             # Get last code
@@ -38,7 +43,8 @@ def accesscode_by_uuid(request):
                     )
             newVisitorCode.save()
             newVisitorCodeSerializer = AccessCodeSerializer(newVisitorCode)
-            return JsonResponse(newVisitorCodeSerializer.data, status=200)
+            response['accessCode'] = newVisitorCodeSerializer.data
+            return JsonResponse(response, status=200)
 
 @api_view(['POST'])
 def accesscode_current(request):
