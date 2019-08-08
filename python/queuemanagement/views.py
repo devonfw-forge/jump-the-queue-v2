@@ -1,5 +1,4 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F
 from django.utils import timezone
 from rest_framework.parsers import JSONParser
@@ -56,7 +55,7 @@ def queue_start(request):
         except Queue.DoesNotExist:
             return HttpResponse(status=404)
 
-@csrf_exempt
+@api_view(['GET'])
 def queue_list(request):
     """
     List all queues
@@ -65,11 +64,4 @@ def queue_list(request):
         queues = Queue.objects.all()
         serializer = QueueSerializer(queues, many=True)
         return JsonResponse(serializer.data, safe=False)
-
-
-
-
-
-
-
 

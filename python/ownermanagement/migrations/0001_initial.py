@@ -12,13 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Queue',
+            name='Owner',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('modificationCounter', models.IntegerField(default=0)),
-                ('minAttentionTime', models.IntegerField(default=120000)),
-                ('started', models.BooleanField(default=False)),
-                ('createdDate', models.DateTimeField(auto_now_add=True)),
+                ('username', models.CharField(max_length=50)),
+                ('password', models.CharField(max_length=100)),
+                ('userType', models.BooleanField(default=True)),
             ],
         ),
     ]

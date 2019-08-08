@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework.parsers import JSONParser
@@ -123,7 +122,7 @@ def accesscode_estimatedTime(request):
         }
         return JsonResponse(estimatedTime, status=200)
 
-@csrf_exempt
+@api_view(['GET'])
 def accesscode_list(request):
     """
     List all codes

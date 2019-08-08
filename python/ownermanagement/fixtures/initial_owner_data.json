@@ -1,0 +1,12 @@
+[
+	{
+		"model": "ownermanagement.owner",
+		"pk": 1,
+		"fields": {
+			"modificationCounter": 0,
+			"username": "adcenter",
+			"password": "adcenter",
+			"userType": true
+		}
+	}
+]
