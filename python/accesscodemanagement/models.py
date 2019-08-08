@@ -23,4 +23,4 @@ class AccessCode(models.Model):
         queueId = models.ForeignKey(Queue, on_delete=models.CASCADE)
 
         class Meta:
-            ordering = ('-createdDate',)
+            ordering = ('createdDate',)
