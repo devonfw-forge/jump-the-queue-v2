@@ -20,4 +20,4 @@ def owner_login(request):
             response['content'].append(ownerSerializer.data)
             return JsonResponse(response, status=200)
         except Owner.DoesNotExist:
-            return HttpResponse(status=403)
+            return HttpResponse(status=401)
