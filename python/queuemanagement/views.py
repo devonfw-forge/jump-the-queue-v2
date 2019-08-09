@@ -1,11 +1,13 @@
 from django.http import HttpResponse, JsonResponse
 from django.db.models import F
 from django.utils import timezone
+from django_eventstream import send_event
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from queuemanagement.models import Queue
 from queuemanagement.serializers import QueueSerializer
 from accesscodemanagement.models import AccessCode, AccessCodeStatus
+from streammanagement.enums import StreamEventType, StreamChannels
 
 
 
@@ -49,6 +51,8 @@ def queue_start(request):
                 # Update all codes associated with such queue
                 AccessCode.objects.filter(queueId=queue.id).update(status=AccessCodeStatus.WAITING.value, modificationCounter=F('modificationCounter')+1)
                 newSerializer = QueueSerializer(queue)
+                # SSE notify
+                send_event(StreamChannels.JTQ_CHANNEL.value, StreamEventType.QUEUE_STARTED.value, newSerializer.data)
                 return JsonResponse(newSerializer.data, status=200)
             else:
                 return HttpResponse(status=200)

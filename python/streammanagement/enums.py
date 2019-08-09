@@ -1,0 +1,10 @@
+from enum import Enum
+
+class StreamChannels(Enum):
+    JTQ_CHANNEL = 'JTQ_CHANNEL'
+
+class StreamEventType(Enum):
+    NEW_CODE_ADDED = 'NEW_CODE_ADDED'
+    QUEUE_STARTED = 'QUEUE_STARTED'
+    CURRENT_CODE_CHANGED = 'CURRENT_CODE_CHANGED'
+    CURRENT_CODE_CHANGED_NULL = 'CURRENT_CODE_CHANGED_NULL'

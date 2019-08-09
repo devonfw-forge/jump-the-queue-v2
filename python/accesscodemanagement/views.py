@@ -1,12 +1,13 @@
 from django.http import JsonResponse
-from django.db.models import Q
 from django.utils import timezone
+from django_eventstream import send_event
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from accesscodemanagement.models import AccessCode, AccessCodeStatus
 from accesscodemanagement.serializers import AccessCodeSerializer
 from queuemanagement import views
 from queuemanagement.models import Queue
+from streammanagement.enums import StreamChannels, StreamEventType
 
 @api_view(['POST'])
 def accesscode_by_uuid(request):
@@ -44,6 +45,8 @@ def accesscode_by_uuid(request):
             newVisitorCode.save()
             newVisitorCodeSerializer = AccessCodeSerializer(newVisitorCode)
             response['accessCode'] = newVisitorCodeSerializer.data
+            # SSE notify
+            send_event(StreamChannels.JTQ_CHANNEL.value, StreamEventType.NEW_CODE_ADDED.value, response['accessCode'])
             return JsonResponse(response, status=200)
 
 @api_view(['POST'])
@@ -102,6 +105,8 @@ def accesscode_nextCode(request):
                         'remainingCodes': remainingCodes,
                         'accessCode': nextCodeSerializer.data
                 }
+                # SSE notify
+                send_event(StreamChannels.JTQ_CHANNEL.value, StreamEventType.CURRENT_CODE_CHANGED.value, nextCodeCto['accessCode'])
                 return JsonResponse(nextCodeCto, status=200)
         else:
                 # There is not next code, therefore no remainingCodes
@@ -111,6 +116,8 @@ def accesscode_nextCode(request):
                         },
                         'accessCode': AccessCodeSerializer().data
                 }
+                # SSE notify
+                send_event(StreamChannels.JTQ_CHANNEL.value, StreamEventType.CURRENT_CODE_CHANGED_NULL.value, nextCodeNullCto['accessCode'])
                 return JsonResponse(nextCodeNullCto, status=200)
 
 @api_view(['POST'])
@@ -121,7 +128,8 @@ def accesscode_estimatedTime(request):
     if request.method == 'POST':
         MILISECONDS_PER_USER = (120000,)
         givenCode = JSONParser().parse(request)
-        codesAhead = AccessCode.objects.filter(Q(status=AccessCodeStatus.WAITING.value) | Q(status=AccessCodeStatus.ATTENDING.value), queueId=givenCode['queueId'], createdDate__lt=givenCode['createdDate']).count()
+        codesAhead = AccessCode.objects.filter(status=AccessCodeStatus.WAITING.value, queueId=givenCode['queueId'], createdDate__lt=givenCode['createdDate']).count()
+        codesAhead += 1 # needed when no codes are being attended and a client renew code
         estimatedTime = {
                 'miliseconds': codesAhead * MILISECONDS_PER_USER[0],
                 'defaultTimeByUserInMs': MILISECONDS_PER_USER[0]

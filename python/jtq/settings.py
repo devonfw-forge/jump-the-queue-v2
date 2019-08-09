@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ORIGIN_ALLOW_ALL = True
+EVENTSTREAM_ALLOW_ORIGIN = '*'
 
 
 # Application definition
@@ -44,10 +45,14 @@ INSTALLED_APPS = [
     'accesscodemanagement.apps.AccesscodemanagementConfig',
     'ownermanagement.apps.OwnermanagementConfig',
     'corsheaders',
+    'channels',
+    'django_eventstream',
+    'streammanagement.apps.StreammanagementConfig',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django_grip.GripMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,7 +81,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'jtq.wsgi.application'
-
+ASGI_APPLICATION = 'jtq.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
