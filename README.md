@@ -11,8 +11,11 @@ New Features:
 * New backend choice technology: Python
 
 ## Important endpoints
-Queue owner -->  localhost:4200/owner
-visitor --> localhost:4200/my-code
+- Owner
+    - localhost:4200/owner
+
+- Visitor
+    - localhost:4200/my-code
 
 App uses localstorage to keep track of visitor codes in order to simulate several visitors open normal browser window and incognito browser window
 
