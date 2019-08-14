@@ -51,6 +51,9 @@ export class VisitorOverviewPageComponent implements OnInit, OnDestroy {
           parsedQueue = JSON.parse(data.data);
           this.queue = parsedQueue;
           this.currentCodeSub = this.accessCodeService.getCurrentCode().subscribe(code => this.currentCode = code);
+          this.visitorCodeSub = this.accessCodeService.getCodeByUuid(codeUuid).subscribe(
+            content => this.visitorCode = content['accessCode']
+          );
           this.subscribeAccessCodeSseTopics(this.sseStream);
         });
       }
