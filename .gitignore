@@ -13,6 +13,7 @@ NestJS/.vscode/
 *.settings
 .*!travis.yml
 java/samples/server/target/
+*.swp
 
 java/samples/server/eclipse-target/
 **/src/generated/
