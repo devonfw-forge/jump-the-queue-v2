@@ -26,12 +26,13 @@ export class LoginService {
     const payload = {
       username,
       password,
-      /*
-      pageable: {
-        pageNumber: 0,
-        pageSize: 1
-      }
-      */
+      sort: [{
+        "direction": "ASC",
+        "property": "username",
+        "ignoreCase": false,
+        "nullHandling": "NATIVE",
+        "ascending": true
+      }]
     };
 
     this.http.post<Owner>(this.baseUrl + 'ownermanagement/v1/owner/search', payload).pipe(
