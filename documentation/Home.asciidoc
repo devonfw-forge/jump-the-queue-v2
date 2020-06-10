@@ -41,7 +41,7 @@ IMPORTANT: If you haven't already, please read the devonfw https://github.com/de
 
 === devon4j (Backend)
 . link:devon4j-overview.asciidoc[devon4j Overview]
-. link:an-devon4j-application.asciidoc[devon4j Application]
+. link:devon4j-application.asciidoc[devon4j Application]
 . link:build-devon4j-application.asciidoc[Build a devon4j Application]
 . link:devon4j-components.asciidoc[devon4j Components]
 . link:devon4j-layers.asciidoc[devon4j Structure]
