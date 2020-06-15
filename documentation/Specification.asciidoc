@@ -7,7 +7,7 @@ toc::[]
 :toclevels: 4
 :numbered:
 :website: https://www.de.capgemini.com/devonfw
-:imagesdir: ./media
+:imagesdir: ./images/Specification
 :imagesComponentNameManagement: /extracted-media/mediaSpecificationTemplate/BCO_ComponentName_Managament_Images
 
 

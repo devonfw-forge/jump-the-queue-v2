@@ -2,8 +2,8 @@
 
 ==== link:jump-the-queue-design.asciidoc[JumpTheQueue Design]
 
-====Sprcification
-. link:Specification.adoc[Specification]
+====Specification
+. link:specification.asciidoc[specification]
 
 ==== devon4j (Backend)
 . link:devon4j-overview.asciidoc[devon4j Overview]
