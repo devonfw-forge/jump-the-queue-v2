@@ -1,5 +1,6 @@
 :toc: macro
 toc::[]
+:imagesdir: ./images/Design
 
 [[jump-the-queue-project]]
 = Jump The Queue Project
