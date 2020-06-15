@@ -43,7 +43,7 @@ The solution focus on this premise and has to facilitate the process of accessin
 
 Roughly, the entire process that a user will follow to obtain and consult the access code of a queue will be:
 
-image:media/ProcessMap.png[]
+image::ProcessMap.png[]
 
 The main actors that will interact with jump the queue component will be the following:
 
@@ -57,7 +57,7 @@ In the next points, we can see the details of the user stories that define the m
 
 We can see the proposed user story map at the following figure.
 
-image:media/UserStoryMap.png[]
+image::UserStoryMap.png[]
 
 [[epic-1.-get-a-number]]
 === *Epic 1. Get a number*
@@ -276,28 +276,28 @@ The user stories that define this are:
 
 We proposed the following sitemap and screens structures to support the requirements that must fulfill the solution.
 
-image:media/SiteMap.png[]
+image::SiteMap.png[]
 
 1º Select Queue. This step will not be a screen and represent the operation that a user will follow to enter to Jump the Queue.
 
 2º Request/ Insert code. This functionality represents the process that a user has to follow to obtain a ticket number. The proposed screen will only apply to visitors users because existing users will have a direct access to step 3.
 
-image:media/InsertCode.png[]
+image::InsertCode.png[]
 
 3º Assigned Order / Show Queue. Here, the user can consult its number and the list of people in the queue.
 
-image:media/ShowQueue.png[]
+image::ShowQueue.png[]
 
 Finally, the owner of the queue can consult and pass the turn with the consult screen and with a button at the screen or pressing a physical button.
 
-image:media/ServeQueue.png[]
+image::ServeQueue.png[]
 
 [[entity-relationship-diagram]]
 == *6. Entity relationship diagram*
 
 Starting from the list of user stories, we found the below entities to support them.
 
-image:media/ER.png[]
+image::ER.png[]
 
 Each entity will content the following information:
 
@@ -381,7 +381,7 @@ In the figure below we have three domains, one for each related Epic.
 ** Terms and conditions: This is shared with Manage queue domain.
 ** Queue owner.
 
-image:media/BoundedContext.png[]
+image::BoundedContext.png[]
 
 [[glossary-of-terms]]
 == *8. Glossary of terms*
