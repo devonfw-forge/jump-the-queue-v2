@@ -289,12 +289,12 @@ public class OwnerEntity {
 ----
  
 Now we have to declare the _getter_ and _setter_ methods for the fields of our entity. We can do this manually or automatially generate them using Eclipse:
-
+L
 image::images/devon4j/4.Components/getter_setter.png[Generating Getter and Setter Methods with Eclipse]
 
 image::images/devon4j/4.Components/select_getter_setter.png.png[Select Getter Setter, 500]
 
-Now click on `Select All` and `Generate`in order to generate gatters and setters for each variable.
+Now click on `Select All` and `Generate` in order to generate gatters and setters for each variable.
 The resulting implementation of our _OwnerEntity_ class should now look like this:
 
 [source,java]
@@ -686,7 +686,7 @@ When using CobiGen for the first time it's recommended to check the health of th
 To do so, right-click one of our entities and select `CobiGen > Health Check...`.
 
 image::images/devon4j/4.Components/cobigen_health_1.png[CobiGen Health Check 1, 550]
-image::images/devon4j/4.Components/cobigen_error.png[CobiGen Error, 500]
+image::images/devon4j/4.Components/cobigen_error.PNG[CobiGen Error, 500]
 
 If you happen to see the above error while running the Health Chek you will have to import the CobiGen Templates locally as follows:
 Right-click in the Package-Manager and navigate to `CobiGen > Adapt Templates`.
@@ -695,11 +695,11 @@ image::images/devon4j/4.Components/import_cobigen.png[Import CobiGen, 500]
 
 A Warning will pop up: Click `OK`
 
-image::images/devon4j/4.Components/import_cobigen_warning.png[Import CobiGen Warning, 500]
+image::images/devon4j/4.Components/import_cobigen_warning.PNG[Import CobiGen Warning, 500]
 
 Once the import is done you need to click `OK` to finalize the import.
 
-image::images//devon4j/4.Components/import_cobigen_info.png[Import CobiGen Info, 500]
+image::images//devon4j/4.Components/import_cobigen_info.PNG[Import CobiGen Info, 500]
 
 The next dialogs will show us if there are outdated templates. In that case just click the "Update" button. You can also run an _Advanced Health Check_ to see exactly which CobiGen templates are available for this project.
 
