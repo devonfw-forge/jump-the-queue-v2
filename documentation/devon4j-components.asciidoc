@@ -537,7 +537,7 @@ public class AccessCodeEntity{
 
 [WARNING]
 ====
-Eclipse will report some errors related to `QueueEntity`and `Status`. +
+Eclipse will report some errors related to `QueueEntity` and `Status`. +
 The errors related to QueueEntity will be resolved, when we create the corresponding class in the next step.
 ====
 
