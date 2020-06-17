@@ -137,7 +137,6 @@ Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and ad
 
 image::images/devon4j/4.Components/appp.png
 
-
 We are now able to create our tables in `h2`. 
 
 ==== _Owner_ Table
