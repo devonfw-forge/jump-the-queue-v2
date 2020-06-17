@@ -142,133 +142,97 @@ We are now able to create our tables in `h2`.
 ==== _Owner_ Table
 We are going to create our own table for _Owner(s)_ by right-clicking the new folder `/jtqj-core/src/main/resources/db/h2` and selecting `New > File`. Following the naming scheme we are going to call it:
 ----
-V0005__Owner_Visitor.sql
+V0002__Create_Owner.sql
 ----
 
-A visitor will provide: _username_, _name_, _password_, _phoneNumber_, _acceptedCommercial_ and _acceptedTerms_ in order to obtain an _Access Code_. We need to represent this data in our table:
+An owner will provide: _username_ and a _password_ in order to obtain an _AccessCode_:
 [source, sql]
 ----
-create table Visitor(
+create table Owner(
   id BIGINT NOT NULL AUTO_INCREMENT,
   modificationCounter INTEGER NOT NULL,
   username VARCHAR(255),
-  name VARCHAR(255),
   password VARCHAR(255),
-  phoneNumber VARCHAR(255),
-  acceptedCommercial BOOL DEFAULT '0',
-  acceptedTerms BOOL NOT NULL DEFAULT '0',
   userType BOOL DEFAULT '0',
-  CONSTRAINT PK_Visitor PRIMARY KEY(id),
+  CONSTRAINT PK_Owner PRIMARY KEY(id)
 );
 ----
 
-* _id_: The ID of each visitor.
+* _id_: The ID of each owner.
 * _modificationCounter_: Used internally by https://en.wikipedia.org/wiki/Java_Persistence_API[JPA] to take care of https://en.wikipedia.org/wiki/Optimistic_concurrency_control[optimistic locking] for us.
-* _username_: The visitors email adress.
-* _name_: The visitors name.
-* _password_: The visitors password.
-* _phoneNumber_: The visitors phone number.
-* _accepterCommercial_: A boolean to denote if the visitor has the accepted commercial agreements.
-* _accepterTerms_: A boolean to denote if the visitor has accepted the terms & conditions.
+* _username_: The ownders email adress.
+* _password_: The ownders password.
 * _userType_: Denotes the type of user.
 
-==== _Daily Queue_ Table
-In a second table we will represent the _Daily Queue_, which will contain _name_, _logo_, _currentNumber_, _attentionTime_, _minAttentionTime_, _active_ and _customers_. This table will be created in `/jtqj-core/src/main/resources/db/type/h2`, and is called:
+==== _Queue_ Table
+In a second table we will represent the _Daily Queue_, which will contain _createdDate_, _minAttentionTime_, _started_. This table will be created in `/jtqj-core/src/main/resources/db/type/h2`, and is called:
 ----
-V0006__Create_Queue.sql
+V0003__Create_Queue.sql
 ----
 
 It will contain the following declarations:
 [source, sql]
 ----
-create table DailyQueue(
+create table Queue(
   id BIGINT NOT NULL AUTO_INCREMENT,
+  createdDate TIMESTAMP NOT NULL,
   modificationCounter INTEGER NOT NULL,
-  name VARCHAR(255),
-  logo VARCHAR(255),
-  currentNumber VARCHAR(255),
-  attentionTime TIMESTAMP,
-  minAttentionTime TIMESTAMP NOT NULL DEFAULT '60000',
-  active BOOL NOT NULL DEFAULT '1',
-  customers INTEGER NOT NULL DEFAULT '0',
-  CONSTRAINT PK_DailyQueue PRIMARY KEY(id),
+  minAttentionTime INTEGER NOT NULL,
+  started BOOL DEFAULT '0',
+  CONSTRAINT PK_Queue PRIMARY KEY(id)
 );
 ----
 
 * _id_: The ID of each queue.
 * _modificationCounter_: Used internally by https://en.wikipedia.org/wiki/Java_Persistence_API[JPA] to take care of https://en.wikipedia.org/wiki/Optimistic_concurrency_control[optimistic locking] for us.
-* _name_: The queues name.
-* _logo_: The queues logo.
-* _currentNumber_: the queue's number being attended.
-* _attentionTime_: Average time required to attend a visitor.
+* _createdDate_: Date when the queue was created.
 * _minAttentionTime_: Minimum time required to attend a visitor, set by default.
-* _active_: A boolean to denote if the queue is active.
-* _customer_: The queues total number of customers.
+* _started_: Denotes wether the queue has satarted
 
 ==== _Access Code_ Table
 The third table will represent the _Access Code_ and contain the _ticketNumber_, _creationTime_, _startTime_ and _endTime_. This table will be created in `/jtqj-core/src/main/resources/db/type/h2`, and is called:
 ----
-V0007__Create_Access_Code.sql
+V0004__Create_Access_Code.sql
 ----
 
 It will contain the following declarations:
 [source, sql]
 ----
-CREATE TABLE AccessCode(
+create table AccessCode(
   id BIGINT NOT NULL AUTO_INCREMENT,
+  createdDate TIMESTAMP NOT NULL,
   modificationCounter INTEGER NOT NULL,
-  ticketNumber VARCHAR(5),
-  creationTime TIMESTAMP,
+  code VARCHAR(4) NOT NULL,
+  uuid VARCHAR(255) NOT NULL,
   startTime TIMESTAMP,
   endTime TIMESTAMP,
-  idVisitor BIGINT NOT NULL,
+  status INTEGER NOT NULL,
   idQueue BIGINT NOT NULL,
   CONSTRAINT PK_AccessCode PRIMARY KEY(id),
-  CONSTRAINT FK_AccessCode_idVisitor FOREIGN KEY(idVisitor) REFERENCES Visitor(id),
-  CONSTRAINT FK_AccessCode_idQueue FOREIGN KEY(idQueue) REFERENCES DailyQueue(id),
+  CONSTRAINT FK_AccessCode_idQueue FOREIGN KEY(idQueue) REFERENCES Queue(id)
 );
 ----
 
 * _id_: The ID of each code.
 * _modificationCounter_: Used internally by https://en.wikipedia.org/wiki/Java_Persistence_API[JPA] to take care of https://en.wikipedia.org/wiki/Optimistic_concurrency_control[optimistic locking] for us.
-* _ticketNumber_: The number of the ticket for a queue.
-* _creationTime_: The date and time of creation.
+* _code_: The number of the ticket for a queue.
+* _uuid_: #TODO
+* _createdDate_: The date and time of creation.
 * _startTime_: The date and time, from which the code is valid.
 * _endTime_: The date and time, when the code expires.
-* _idVisitor_: The relation with the _Visitor_ table.
+* _status_: The status of the owner in relation to a queue with respect to the aspects WAITING, ATTENDING, ATTENDED, SKIPPED, NOTSTARTED
 * _idQueue_: The relation with the _DailyQueue_ table.
 
 ==== Mock Data
 Finally we are going to provide a certain amount of mock data, which will be available right from the start in our application. Create a new SQL script in `/jtqj-core/src/main/resources/db/migration/1.0/`, called:
 ----
-V0008__Master_data.sql
+V0005__Master_data.sql
 ----
 
 Copy and paste the following data into it:
 [source,sql]
 ----
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (0, 1, 'mike@mail.com', 'test', '1', '123456789', '0', '1', '1');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (1, 1, 'peter@mail.com', 'test', '1', '123456789', '1', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (2, 1, 'pablo@mail.com', 'test', '1', '123456789', '0', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (3, 1, 'test1@mail.com', 'test', '1', '123456789', '0', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (4, 1, 'test2@mail.com', 'test', '1', '123456789', '1', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (5, 1, 'test3@mail.com', 'test', '1', '123456789', '0', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (6, 1, 'test4@mail.com', 'test', '1', '123456789', '0', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (7, 1, 'test5@mail.com', 'test', '1', '123456789', '1', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (8, 1, 'test6@mail.com', 'test', '1', '123456789', '0', '1', '0');
-INSERT INTO Visitor (id, modificationCounter, username, name, password, phoneNumber, acceptedCommercial, acceptedTerms, userType) VALUES (9, 1, 'test7@mail.com', 'test', '1', '123456789', '0', '1', '0');
-
-INSERT INTO DailyQueue (id, modificationCounter, name, logo, currentNumber, attentionTime, minAttentionTime, active, customers) VALUES (1, 1, 'Day2', 'C:/logos/Day1Logo.png', 'Q001', NULL, '1970-01-01 00:01:00', TRUE, 9);
-
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (1, 1, 'Q001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 1, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (2, 1, 'Q002', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 2, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (3, 1, 'Q003', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 3, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (4, 1, 'Q004', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 4, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (5, 1, 'Q005', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 5, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (6, 1, 'Q006', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 6, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (7, 1, 'Q007', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 7, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (8, 1, 'Q008', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 8, 1);
-INSERT INTO AccessCode (id, modificationCounter, ticketNumber, creationTime, startTime, endTime, idVisitor, idQueue) VALUES (9, 1, 'Q009', CURRENT_TIMESTAMP, '2008-01-01 00:00:01', NULL, 9, 1);
+INSERT INTO Owner(id, modificationCounter, username, password, userType) VALUES (0, 1, 'adcenter', 'adcenter', '1');
 ----
 
 === The Core of the Components
