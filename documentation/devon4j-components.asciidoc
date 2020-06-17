@@ -292,7 +292,7 @@ Now we have to declare the _getter_ and _setter_ methods for the fields of our e
 
 image::images/devon4j/4.Components/getter_setter.png[Generating Getter and Setter Methods with Eclipse]
 
-image::images/devon4j/4.Components/select_getter_setter.png[Select Getter Setter, 500]
+image::images/devon4j/4.Components/select_getter_setter.png.png[Select Getter Setter, 500]
 
 Now click on `Select All` and `Generate`in order to generate gatters and setters for each variable.
 The resulting implementation of our _OwnerEntity_ class should now look like this:
@@ -697,7 +697,7 @@ A Warning will pop up: Click `OK`
 
 image::images/devon4j/4.Components/import_cobigen_warning.png[Import CobiGen Warning, 500]
 
-When the import is done xou need to click `OK` to finalize the import.
+Once the import is done you need to click `OK` to finalize the import.
 
 image::images//devon4j/4.Components/import_cobigen_info.png[Import CobiGen Info, 500]
 
