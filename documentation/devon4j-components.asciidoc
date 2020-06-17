@@ -133,7 +133,7 @@ jtqj-core/src/main/resources/db/migration/1.0/V0001__Create_Sequence.sql
 
 As we want to use the h2 database, we are going to create an `h2` folder by right-clicking the folder `/jtqj-core/src/main/resources/db` and selecting `New > Folder`. We are simly going to call this folder `h2`.
 Now we have to add the path to the `h2-folder` in the file `applications.properites`.
-Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and add ', classpath:db/h2':
+Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and add ', classpath:db/h2' as follows
 
 image::images/devon4j/4.Components/appp.png
 
