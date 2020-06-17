@@ -135,7 +135,7 @@ As we want to use the h2 database, we are going to create an `h2` folder by righ
 Now we have to add the path to the `h2-folder` in the file `applications.properites`.
 Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and add ', classpath:db/h2' as follows
 
-image::images/devon4j/4.Components/appp.PNG
+image::images/devon4j/4.Components/appp.png[Appp, 500]
 
 We are now able to create our tables in `h2`. 
 
@@ -253,8 +253,8 @@ image::images/devon4j/4.Components/new_package_2.png[New Package Creation Step 2
 
 Now create a new Java class in this package and call it `OwnerEntity`:
 
-image::images/devon4j/4.Components/new_class.png[New Class Creation, 500]
 image::images/devon4j/4.Components/class_generation.png[Class Generation, 500]
+image::images/devon4j/4.Components/new_class.png[New Class Creation, 500]
 
 We are going to need fields, which represent the data model, so our entity should contain the following code:
 
