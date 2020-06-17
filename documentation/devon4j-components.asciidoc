@@ -75,7 +75,7 @@ The components will be defined as follows:
 
 [caption=""]
 |===
-|Visitor | Access Code | Daily Queue
+|Owner| Access Code | Queue
 
 |username
 |ticketNumber
@@ -126,18 +126,24 @@ If you feel more comfortable managing all the entities in a single component, yo
 === The Database
 Projects created with the _devon4j_ archetype already contain a pre-defined database schema, which we can use as a basis to create our own. We are going to utilize the http://www.h2database.com/html/main.html[H2 Database Engine], because our generated _devon4j_ application uses it by default.
 
-There are four pre-defined database schemas:
+There is already one predefined schema:
 ----
-jtqj-core/src/main/resources/db/type/h2/V0001__Create_Sequence.sql
-jtqj-core/src/main/resources/db/type/h2/V0002__Create_RevInfo.sql
-jtqj-core/src/main/resources/db/type/h2/V0003__Create_BinaryObject.sql
-jtqj-core/src/main/resources/db/migration/1.0/V0004__Add_blob_data.sql
+jtqj-core/src/main/resources/db/migration/1.0/V0001__Create_Sequence.sql
 ----
 
-==== _Visitor_ Table
-We are going to create our own table for _Visitor(s)_ by right-clicking the folder `/jtqj-core/src/main/resources/db/type/h2` and selecting `New > File`. Following the naming scheme we are going to call it:
+As we want to use the h2 database, we are going to create an `h2` folder by right-clicking the folder `/jtqj-core/src/main/resources/db` and selecting `New > Folder`. We are simly going to call this folder `h2`.
+Now we have to add the path to the `h2-folder` in the file `applications.properites`.
+Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and add ', classpath:db/h2':
+
+image::images/devon4j/4.Components/applicationproperties.png
+
+
+We are now able to create our tables in `h2`. 
+
+==== _Owner_ Table
+We are going to create our own table for _Owner(s)_ by right-clicking the new folder `/jtqj-core/src/main/resources/db/h2` and selecting `New > File`. Following the naming scheme we are going to call it:
 ----
-V0005__Create_Visitor.sql
+V0005__Owner_Visitor.sql
 ----
 
 A visitor will provide: _username_, _name_, _password_, _phoneNumber_, _acceptedCommercial_ and _acceptedTerms_ in order to obtain an _Access Code_. We need to represent this data in our table:
