@@ -291,6 +291,7 @@ public class OwnerEntity {
 Now we have to declare the _getter_ and _setter_ methods for the fields of our entity. We can do this manually or automatially generate them using Eclipse:
 
 image::images/devon4j/4.Components/getter_setter.png[Generating Getter and Setter Methods with Eclipse]
+
 image::images/devon4j/4.Components/select_getter_setter.png[Select Getter Setter, 500]
 
 Now click on `Select All` and `Generate`in order to generate gatters and setters for each variable.
