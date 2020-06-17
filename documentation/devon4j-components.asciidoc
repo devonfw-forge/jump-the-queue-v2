@@ -261,18 +261,10 @@ We are going to need fields, which represent the data model, so our entity shoul
 [source,java]
 ----
   ...
-
+ 
   private String username;
 
-  private String name;
-
-  private String phoneNumber;
-
   private String password;
-
-  private Boolean acceptedCommercial;
-
-  private Boolean acceptedTerms;
 
   private Boolean userType;
 
@@ -284,14 +276,14 @@ We are going to need fields, which represent the data model, so our entity shoul
 We are not adding _id_ or _modificationCounter_, because CobiGen will generate these fields for us.
 ====
 
-Now we need to declare our entity as a JPA entity with the `@Entity` annotation (_javax.persistence.Entity_) at class level. To map the entity to the database table, we will use the `@Table` annotation (_javax.persistence.Table_) defining the `name` of our already created _Visitor_ table (also at class level):
+Now we need to declare our entity as a JPA entity with the `@Entity` annotation (_javax.persistence.Entity_) at class level. To map the entity to the database table, we will use the `@Table` annotation (_javax.persistence.Table_) defining the `name` of our already created _Owner_ table (also at class level):
 [source, java]
 ----
 ...
 
 @Entity
-@Table(name = "Visitor")
-public class VisitorEntity {
+@Table(name = "Owner")
+public class OwnerEntity {
   
   ...
 ----
