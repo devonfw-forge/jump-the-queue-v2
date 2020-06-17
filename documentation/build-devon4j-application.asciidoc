@@ -47,7 +47,7 @@ Here we are going to generate our devon4j application template as a starting poi
 
 ----
 C:\...\workspaces\main\jumpthequeue\java>
-    ##TODO New comandlet###
+    java create com.devonfw.application.jtqj com.devonfw.java.jtqj -Dversion=0.0.1
 ----
 
 [NOTE]
