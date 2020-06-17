@@ -393,7 +393,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
-import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
 
 @Entity
 @Table(name = "AccessCode")
@@ -600,7 +599,6 @@ public class QueueEntity{
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp createdDate;
 
-  private static final long serialVersionUID = 1L;
 
   /**
    * @return the minAttentionTime
