@@ -135,7 +135,7 @@ As we want to use the h2 database, we are going to create an `h2` folder by righ
 Now we have to add the path to the `h2-folder` in the file `applications.properites`.
 Navigate to `/jtqj-core/source/main/resources/db/applications.properties` and add ', classpath:db/h2':
 
-image::images/devon4j/4.Components/applicationproperties.png[applicationProperties 300]
+image::images/devon4j/4.Components/applicationproperties.png[ApplicationProperties, 300]
 
 
 We are now able to create our tables in `h2`. 
