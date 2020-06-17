@@ -688,9 +688,18 @@ To do so, right-click one of our entities and select `CobiGen > Health Check...`
 image::images/devon4j/4.Components/cobigen_health_1.png[CobiGen Health Check 1, 550]
 image::images/devon4j/4.Components/cobigen_error.png[CobiGen Error, 500]
 
-If you happen to see the above error while running the Health Chek you will have to import the CobiGen Templates locally:
+If you happen to see the above error while running the Health Chek you will have to import the CobiGen Templates locally as follows:
+Right-click in the Package-Manager and navigate to `CobiGen > Adapt Templates`.
 
+image::images/devon4j/4.Components/import_cobigen.png[Import CobiGen, 500]
 
+A Warning will pop up: Click `OK`
+
+image::images/devon4j/4.Components/import_cobigen_warning.png[Import CobiGen Warning, 500]
+
+When the import is done xou need to click `OK` to finalize the import.
+
+image::images//devon4j/4.Components/import_cobigen_info.png[Import CobiGen Info, 500]
 
 The next dialogs will show us if there are outdated templates. In that case just click the "Update" button. You can also run an _Advanced Health Check_ to see exactly which CobiGen templates are available for this project.
 
