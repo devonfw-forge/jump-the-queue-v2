@@ -577,7 +577,6 @@ The contents of _QueueEntity_ before using CobiGen will be:
 
 [source,java]
 ----
-package com.devonfw.application.jtqj.queuemanagement.dataaccess.api;
 
 package com.devonfw.application.jtqj.queuemanagement.dataaccess.api;
 
@@ -774,7 +773,8 @@ We repeat this process on our _AccessCodeEntity_, but in this case -- since its 
 
 image::images/devon4j/4.Components/cobigen-accesscode-new.png[CobiGen New AccessCode]
 
-After CobiGen has finished generating, fix the issues regarding `*import* java.sql.Timestamp` (as you did in the last step) in the following files:
+After CobiGen has finished generating, we will have errors regarding _Timestamp_ and _Status_
+We can fix these issues by importing the class Timestamp with `*import* java.sql.Timestamp` and the enum Status with `*import* com.devonfw.application.jtqj.general.common.api.Status` in the following files:
 
 *jtqj-core:*
 
@@ -786,24 +786,12 @@ After CobiGen has finished generating, fix the issues regarding `*import* java.s
 * `accesscodemanagement.logic.api.to.AccessCodeEto`
 * `accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo`
 
-There will be some compilation errors left. This is because we have some dependencies on _Queue_ and _Visitor_ component elements, that are not created yet. These compilation errors will be fixed in the next steps.
 
-image::images/devon4j/4.Components/cobigen6_expected_errors.png[CobiGen Expeted Errors]
+==== _Owner_ Component Structure (Entity without Relations)
+Finally we are going to generate the same classes that we generated for the _QueueEntity_ component for our _OwnerEntity_ component:
 
-==== _Visitor_ Component Structure (Entity without Relations)
-Finally we are going to generate the same classes that we generated for the _QueueEntity_ component for our _VisitorEntity_ component:
+image::images/devon4j/4.Components/cobigen-owner-new.png[CobiGen New Owner]
 
-image::images/devon4j/4.Components/cobigen-visitor-new.png[CobiGen New Visitor]
-
-Once CobiGen has finished we can fix the rest of the compilation errors related to `VisitorEto` by manually importing the class into:
-
-*jtqj-core:*
-
-* `accesscodemanagement.logic.impl.usecase.UcFindAccessCodeImpl`
-
-*jtqj-api:*
-
-* `accesscodemanagement.logic.api.to.AccessCodeCto`
 
 ==== Run the App
 If all compilation errors are solved run the app (right-click `SpringBootApp.java > Run As > Java Application`). The backend should launch without errors.
