@@ -797,7 +797,7 @@ image::images/devon4j/4.Components/cobigen-owner-new.png[CobiGen New Owner]
 If all compilation errors are solved run the app (right-click `SpringBootApp.java > Run As > Java Application`). The backend should launch without errors.
 
 *Congratulations!* +
-You have created your first devon4j components. You should be able to access the login screen via http://localhost:8081/jumpthequeue[localhost:8081/jumpthequeue]. You can login with the username and password "*waiter*". In the next chapter we will show and explain each of the created elements in detail.
+You have created your first devon4j components. You should be able to access the login screen via http://localhost:8081/jumpthequeue[localhost:8081/jumpthequeue]. You can login with the username and password "*admin*". In the next chapter we will show and explain each of the created elements in detail.
 
 '''
 *Next Chapter*: link:devon4j-layers.asciidoc[devon4j Structure]
