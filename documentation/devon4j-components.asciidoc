@@ -397,7 +397,7 @@ import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenc
 
 @Entity
 @Table(name = "AccessCode")
-public class AccessCodeEntity extends ApplicationPersistenceEntity implements AccessCode {
+public class AccessCodeEntity{
 
   @Size(min = 4, max = 4)
   private String code;
@@ -579,6 +579,8 @@ The contents of _QueueEntity_ before using CobiGen will be:
 ----
 package com.devonfw.application.jtqj.queuemanagement.dataaccess.api;
 
+package com.devonfw.application.jtqj.queuemanagement.dataaccess.api;
+
 import java.sql.Timestamp;
 
 import javax.persistence.Entity;
@@ -586,125 +588,70 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 @Entity
-@Table(name = "DailyQueue")
-public class QueueEntity {
+@Table(name = "Queue")
+public class QueueEntity{
 
-  private String name;
+  private int minAttentionTime;
 
-  private String logo;
-
-  private String currentNumber;
+  private Boolean started;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp attentionTime;
+  private Timestamp createdDate;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp minAttentionTime;
-
-  private Boolean active;
-
-  private int customers;
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the logo
-   */
-  public String getLogo() {
-    return logo;
-  }
-
-  /**
-   * @param logo the logo to set
-   */
-  public void setLogo(String logo) {
-    this.logo = logo;
-  }
-
-  /**
-   * @return the currentNumber
-   */
-  public String getCurrentNumber() {
-    return currentNumber;
-  }
-
-  /**
-   * @param currentNumber the currentNumber to set
-   */
-  public void setCurrentNumber(String currentNumber) {
-    this.currentNumber = currentNumber;
-  }
-
-  /**
-   * @return the attentionTime
-   */
-  public Timestamp getAttentionTime() {
-    return attentionTime;
-  }
-
-  /**
-   * @param attentionTime the attentionTime to set
-   */
-  public void setAttentionTime(Timestamp attentionTime) {
-    this.attentionTime = attentionTime;
-  }
+  private static final long serialVersionUID = 1L;
 
   /**
    * @return the minAttentionTime
    */
-  public Timestamp getMinAttentionTime() {
-    return minAttentionTime;
+  public int getMinAttentionTime() {
+
+    return this.minAttentionTime;
   }
 
   /**
    * @param minAttentionTime the minAttentionTime to set
    */
-  public void setMinAttentionTime(Timestamp minAttentionTime) {
+  public void setMinAttentionTime(int minAttentionTime) {
+
     this.minAttentionTime = minAttentionTime;
   }
 
   /**
-   * @return the active
+   * @return the started
    */
-  public Boolean getActive() {
-    return active;
+  public Boolean getStarted() {
+
+    return this.started;
   }
 
   /**
-   * @param active the active to set
+   * @param started the started to set
    */
-  public void setActive(Boolean active) {
-    this.active = active;
+  public void setStarted(Boolean started) {
+
+    this.started = started;
   }
 
   /**
-   * @return the customers
+   * @return the createdDate
    */
-  public int getCustomers() {
-    return customers;
+  public Timestamp getCreatedDate() {
+
+    return this.createdDate;
   }
 
   /**
-   * @param customers the customers to set
+   * @param createdDate the createdDate to set
    */
-  public void setCustomers(int customers) {
-    this.customers = customers;
+  public void setCreatedDate(Timestamp createdDate) {
+
+    this.createdDate = createdDate;
   }
 
 }
+
 ----
 
 Now we have finished preparing the _core_ of our components and can start using CobiGen to generate the remaining structure (services, layers, DAOs, ...).
