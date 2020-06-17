@@ -388,23 +388,24 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
-import com.devonfw.application.jtqj.visitormanagement.dataaccess.api.VisitorEntity;
+import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenceEntity;
 
 @Entity
 @Table(name = "AccessCode")
-public class AccessCodeEntity {
+public class AccessCodeEntity extends ApplicationPersistenceEntity implements AccessCode {
 
-  @Size(min = 2, max = 5)
-  private String ticketNumber;
+  @Size(min = 4, max = 4)
+  private String code;
+
+  private String uuid;
 
   @Temporal(TemporalType.TIMESTAMP)
-  private Timestamp creationTime;
+  private Timestamp createdDate;
 
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp startTime;
@@ -412,49 +413,73 @@ public class AccessCodeEntity {
   @Temporal(TemporalType.TIMESTAMP)
   private Timestamp endTime;
 
-  private VisitorEntity visitor;
+  private Status status;
 
   private QueueEntity queue;
 
+  private static final long serialVersionUID = 1L;
+
   /**
-   * @return the ticketNumber
+   * @return the code
    */
-  public String getTicketNumber() {
-    return ticketNumber;
+  public String getCode() {
+
+    return this.code;
   }
 
   /**
-   * @param ticketNumber the ticketNumber to set
+   * @param code the code to set
    */
-  public void setTicketNumber(String ticketNumber) {
-    this.ticketNumber = ticketNumber;
+  public void setCode(String code) {
+
+    this.code = code;
   }
 
   /**
-   * @return the creationTime
+   * @return the uuid
    */
-  public Timestamp getCreationTime() {
-    return creationTime;
+  public String getUuid() {
+
+    return this.uuid;
   }
 
   /**
-   * @param creationTime the creationTime to set
+   * @param uuid the uuid to set
    */
-  public void setCreationTime(Timestamp creationTime) {
-    this.creationTime = creationTime;
+  public void setUuid(String uuid) {
+
+    this.uuid = uuid;
+  }
+
+  /**
+   * @return the created
+   */
+  public Timestamp getCreatedDate() {
+
+    return this.createdDate;
+  }
+
+  /**
+   * @param created the created to set
+   */
+  public void setCreatedDate(Timestamp createdDate) {
+
+    this.createdDate = createdDate;
   }
 
   /**
    * @return the startTime
    */
   public Timestamp getStartTime() {
-    return startTime;
+
+    return this.startTime;
   }
 
   /**
    * @param startTime the startTime to set
    */
   public void setStartTime(Timestamp startTime) {
+
     this.startTime = startTime;
   }
 
@@ -462,30 +487,32 @@ public class AccessCodeEntity {
    * @return the endTime
    */
   public Timestamp getEndTime() {
-    return endTime;
+
+    return this.endTime;
   }
 
   /**
    * @param endTime the endTime to set
    */
   public void setEndTime(Timestamp endTime) {
+
     this.endTime = endTime;
   }
 
   /**
-   * @return the visitor
+   * @return the status
    */
-  @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-  @JoinColumn(name = "idVisitor")
-  public VisitorEntity getVisitor() {
-    return visitor;
+  public Status getStatus() {
+
+    return this.status;
   }
 
   /**
-   * @param visitor the visitor to set
+   * @param status the status to set
    */
-  public void setVisitor(VisitorEntity visitor) {
-    this.visitor = visitor;
+  public void setStatus(Status status) {
+
+    this.status = status;
   }
 
   /**
@@ -494,13 +521,15 @@ public class AccessCodeEntity {
   @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
   @JoinColumn(name = "idQueue")
   public QueueEntity getQueue() {
-    return queue;
+
+    return this.queue;
   }
 
   /**
    * @param queue the queue to set
    */
   public void setQueue(QueueEntity queue) {
+
     this.queue = queue;
   }
 
@@ -509,12 +538,32 @@ public class AccessCodeEntity {
 
 [WARNING]
 ====
-Eclipse will report some errors related to `QueueEntity`. +
-These will be resolved, when we create the corresponding class in the next step.
+Eclipse will report some errors related to `QueueEntity`and `Status`. +
+The errors related to QueueEntity will be resolved, when we create the corresponding class in the next step.
 ====
 
+We will now resolve the erorrs related to `Status` by creating a new Enum `Status`in `jtqj-api/src/main/java/com.devonfw.application.jtqj.general.common.api`:
+Copy and paste the following code in your class.
+
+----
+package com.devonfw.application.jtqj.general.common.api;
+
+
+public enum Status {
+  WAITING, ATTENDING, ATTENDED, SKIPPED, NOTSTARTED
+}
+----
+
+We will import `Status` into `AccessCodeEntity` by inserting the following:
+
+----
+import com.devonfw.application.jtqj.general.common.api.Status;
+----
+
+The errors related to `Status` should now be gone.
+
 ==== _Queue_ Component
-Finally, we are going to repeat the same process for our last entity _QueueEntity_ component. Create these packages in `/jtqj-core/src/main/java`:
+Finally, we are going to repeat the same process for our last entity _QueueEntity_ component. Create these packages in `/jtqj-core/src/main/java/`:
 ----
 com.devonfw.application.jtqj.queuemanagement.dataaccess.api
 ----
