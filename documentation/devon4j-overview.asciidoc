@@ -86,4 +86,4 @@ Finally the _devon4j_ applications provide a _general_ package to locate the cro
 In the next chapters you can find all the details about the implementation of each layer and how to develop all the relevant parts of a web app based on _devonfw_ framework and _devon4j_.
 
 '''
-*Next Chapter*: link:an-devon4j-application.asciidoc[A devon4j Application]
+*Next Chapter*: link:devon4j-application.asciidoc[A devon4j Application]
