@@ -541,9 +541,10 @@ Eclipse will report some errors related to `QueueEntity` and `Status`. +
 The errors related to QueueEntity will be resolved, when we create the corresponding class in the next step.
 ====
 
-We will now resolve the erorrs related to `Status` by creating a new Enum `Status`in `jtqj-api/src/main/java/com.devonfw.application.jtqj.general.common.api`:
+We will now resolve the erorrs related to `Status` by creating a new Enum `Status` in `jtqj-api/src/main/java/com.devonfw.application.jtqj.general.common.api`:
 Copy and paste the following code in your class.
 
+[source,java]
 ----
 package com.devonfw.application.jtqj.general.common.api;
 
