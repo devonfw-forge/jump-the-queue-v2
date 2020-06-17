@@ -240,20 +240,21 @@ Now that we have defined the database for our entities, we should start creating
 
 We are going to use CobiGen to generate the component structure. That means that -- as already commented -- we can generate all the structure and layers starting from a _core_ element: a simple _Plain Old Java Object_ that represents our _Entity_. So, in order to use CobiGen, we have to create our entities in the expected locations (as you will see in the following section): `<entitymanagement>.dataaccess.api`.
 
-==== _Visitor_ Component
-To implement the component we will need to define a _VisitorEntity_ to connect and manage the data of the _Visitor_ table in the database. The name of this component will be `visitormanagement`, the entity will be called `VisitorEntity`.
+==== _Owner_ Component
+To implement the component we will need to define an _OwnerEntity_ to connect and manage the data of the _Owner_ table in the database. The name of this component will be `ownermanagement`, the entity will be called `OwnerEntity`.
 
 Right-click on the root folder of the project `/jtqj-core/src/main/java`, select `New > Package` and create the following package:
 ----
-com.devonfw.application.jtqj.visitormanagement.dataaccess.api
+com.devonfw.application.jtqj.ownermanagement.dataaccess.api
 ----
 
 image::images/devon4j/4.Components/new_package_1.png[New Package Creation Step 1, 500]
 image::images/devon4j/4.Components/new_package_2.png[New Package Creation Step 2, 500]
 
-Now create a new Java class in this package and call it `VisitorEntity`:
+Now create a new Java class in this package and call it `OwnerEntity`:
 
 image::images/devon4j/4.Components/new_class.png[New Class Creation, 500]
+image::images/devon4j/4.Components/class_generation.png[Class Generation, 500]
 
 We are going to need fields, which represent the data model, so our entity should contain the following code:
 
