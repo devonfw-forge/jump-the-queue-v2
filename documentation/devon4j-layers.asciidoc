@@ -357,16 +357,17 @@ As already mentioned, in this tutorial we will be using https://www.getpostman.c
 First, open your _JumpTheQueue_ project in Eclipse and run the app (right-click `SpringBootApp.java > Run as > Java Application`.
 
 ==== Simple Call
-If you remember, we added some xref:devon4j-components#mock-data[mock data] previously, to have some visitor info available. Let's try to retrieve a visitor's information by using our _visitormanagement service_.
+If you remember, we added some xref:devon4j-components#mock-data[mock data] previously, to have some owner info available. Let's try to retrieve an owner's information by using our _ownermanagement service_.
 
 Select the service *GET* and send: +
-`http://localhost:8081/jumpthequeue/services/rest/visitormanagement/v1/visitor/1/`
+`http://localhost:8081/jumpthequeue/services/rest/ownermanagement/v1/owner/0/`
 
-We hope to obtain the data of the visitor with id `1`.
+We hope to obtain the data of the visitor with id `0`.
+Instead we get a response containing the login form:
 
-image::images/devon4j/5.Layers/jumpthequeue_simpeGet1.png[JumpTheQueue Simple GET Request 1]
+image::images/devon4j/5.Layers/jumpthequeue_simpleGet1.png[JumpTheQueue Simple GET Request 1]
 
-Instead we get a response containing the login form. This is because _devon4j_ applications, by default, implement _Spring Security_. So we would need to login to access this service.
+This is because _devon4j_ applications, by default, implement _Spring Security_. So we would need to login to access this service.
 
 To make testing easier, we are going to "open" the application, to avoid the security filter, and we are going to enable the https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[CORS] filter to allow requests from (Angular-) clients.
 
@@ -376,6 +377,9 @@ In the file `general/service/impl/config/BaseWebSecurityConfig.java` edit the `c
 ----
 @Override
 public void configure(HttpSecurity http) throws Exception {
+
+
+  String[] unsecuredResources = new String[] { "/login", "/security/**", "/services/rest/login","/services/rest/logout" };
 
   http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
 
@@ -397,9 +401,9 @@ Now we run the app again and send the same GET request. We should now be able to
 image::images/devon4j/5.Layers/jumpthequeue_simpeGet2.png[JumpTheQueue Simple GET Request 2]
 
 ==== Paginated Response
-_CobiGen_ has created a complete set of services for us, so we can access a paginated list of visitors without any extra implementation.
+_CobiGen_ has created a complete set of services for us, so we can access a paginated list of owners without any extra implementation.
 
-We are going to use the following service defined in `visitormanagement/service/api/rest/VisitormanagementRestService.java`:
+We are going to use the following service defined in `ownermanagement/service/api/rest/OwnermanagementRestService.java`:
 
 [source,java]
 ----
@@ -408,12 +412,12 @@ We are going to use the following service defined in `visitormanagement/service/
 	public Page<VisitorEto> findVisitors(VisitorSearchCriteriaTo searchCriteriaTo);
 ----
 
-The service definition states, that we will need to provide a _Search Criteria Transfer Object_. This object will work as a filter for the search, as you can see in `visitormanagement/dataaccess/api/repo/VisitorRepository.java` in the `findByCriteria` method.
+The service definition states, that we will need to provide a _Search Criteria Transfer Object_. This object will work as a filter for the search, as you can see in `ownermanagement/dataaccess/api/repo/OwnerRepository.java` in the `findByCriteria` method.
 
-If the _Search Criteria Transfer Object_ is empty, we will retrieve all visitors. However, if we pass data with the object, the result will be filtered.
+If the _Search Criteria Transfer Object_ is empty, we will retrieve all owners. However, if we pass data with the object, the result will be filtered.
 
 Select the service *POST* and enter: +
-`http://localhost:8081/jumpthequeue/services/rest/visitormanagement/v1/visitor/search`
+`http://localhost:8081/jumpthequeue/services/rest/ownermanagement/v1/owner/search`
 
 In the 'Body' tab, below the address bar, we'll have to define a _SearchCriteria_ object, which will have a _pageable_ defined (make sure, the 'raw' option is selected):
 
@@ -432,8 +436,8 @@ In the 'Headers' tab we'll have to ensure that `Content-Type` `application/json`
 
 [NOTE]
 ====
-You can see the definition of the _VisitorSearchCriteriaTo_ in:
-`visitormanagement/logic/api/to/VisitorSearchCriteriaTo.java`
+You can see the definition of the _OwnerSearchCriteriaTo_ in:
+`ownermanagement/logic/api/to/OwnerSearchCriteriaTo.java`
 ====
 
 The result will appear in the 'Headers' tab and look something like this:
@@ -445,7 +449,7 @@ If we want to filter the results, we can define a _criteria_ object in the body.
 [source,json]
 ----
 {
-	"username": "test1@mail.com",
+	"username": "adcenter",
 	"pageable" : {
 		"pageNumber" : "0",
 		"pageSize": "10",
@@ -458,12 +462,12 @@ This will filter the results to find only visitors with username `test1@mail.com
 
 image::images/devon4j/5.Layers/jumpthequeue_paginated2.png[JumpTheQueue Paginated Response 2]
 
-We could customize this filter by editing the `visitormanagement/logic/impl/usecase/UcFindVisitorImpl.java` class.
+We could customize this filter by editing the `ownermanagement/logic/impl/usecase/UcFindOwnerImpl.java` class.
 
 ==== Saving a Visitor
-To meet the requirements of the xref:jump-the-queue-design#user-story-register[User Story: Register], we need to register a _visitor_ and return an _access code_.
+To meet the requirements of the xref:jump-the-queue-design#user-story-register[User Story: Register], we need to register an _owner_ and return an _access code_.
 
-By default _CobiGen_ has generated the _Read_ operation in the _UcFindEntityImpl_ for us, as well as the rest of the _CRUD_ operations in _UcManageEntityImpl_. So we are already able to _create_, _read_, _update_ and _delete_ visitors in our database, without any extra implementation required.
+By default _CobiGen_ has generated the _Read_ operation in the _UcFindEntityImpl_ for us, as well as the rest of the _CRUD_ operations in _UcManageEntityImpl_. So we are already able to _create_, _read_, _update_ and _delete_ owners in our database, without any extra implementation required.
 
 To delegate _Spring_ to manage _transactions_, we only have to add the `@Transactional` annotation to our _usecase_  implementations. Since _devonfw 2.2.0_ CobiGen adds this annotation automatically, so we don't have to do it manually. Check your logic implementation classes and add the annotation in case it's not present:
 
@@ -477,37 +481,33 @@ public class UcManageVisitorImpl extends AbstractVisitorUc implements UcManageVi
 }
 ----
 
-To save a visitor we only need to use the _REST_ resource `/services/rest/visitormanagement/v1/visitor` and provide the visitor definition for _VisitorEto_ in the body.
+To save an owner we only need to use the _REST_ resource `/services/rest/ownermanagement/v1/owner` and provide the owner definition for _OwnerEto_ in the body.
 
 [NOTE]
 ====
-You can see the definition for _VisitorEto_ in:
-`visitormanagement/logic/api/to/VisitorEto.java`
+You can see the definition for _OwnerEto_ in:
+`ownermanagement/logic/api/to/OwnerEto.java`
 ====
 
 Select the service *POST* and enter: +
-`http://localhost:8081/jumpthequeue/services/rest/visitormanagement/v1/visitor`
+`http://localhost:8081/jumpthequeue/services/rest/ownermanagement/v1/owner`
 
-Provide a _Visitor_ object in the body, such as this:
+Provide an _Owner_ object in the body, such as this:
 
 [source,json]
 ----
 {
-	"username": "mary@mail.com",
-	"name": "Mary",
-	"phoneNumber": "1234567",
+	"username": "mary",
 	"password": "12345",
-	"acceptedCommercial": "true",
-	"acceptedTerms": "true",
 	"userType": "false"
 }
 ----
 
 We will get the following result:
 
-image::images/devon4j/5.Layers/jumpthequeue_saveVisitor.png[JumpTheQueue Save Visitor]
+image::images/devon4j/5.Layers/jumpthequeue_saveOwner.png[JumpTheQueue Save Owner]
 
-In the body of the response we can see the default content for a successful service response; the data of the new visitor. This is the default implementation when saving a new _entity_ with _devon4j_ applications. However, the _JumpTheQueue_ design defines, that the response must provide the _access code_ created for the user as well, so we will need to change the logic of our application to fit this requirement.
+In the body of the response we can see the default content for a successful service response; the data of the new owner. This is the default implementation when saving a new _entity_ with _devon4j_ applications. However, the _JumpTheQueue_ design defines, that the response must provide the _access code_ created for the user as well, so we will need to change the logic of our application to fit this requirement.
 
 In the next chapter we will learn how to customize the code generated by _CobiGen_ to adapt it to our needs.
 
