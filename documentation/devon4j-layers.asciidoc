@@ -302,7 +302,7 @@ The sections above describe the main elements of layers of the _devon4j_ compone
 
 Take a look to our application structure:
 
-*Visitor Component Core (without Relations)*
+*Owner Component Core (without Relations)*
 
 image::images/devon4j/5.Layers/jumpthequeue_structure_core.png[JumpTheQueue Core Structure, 350]
 
@@ -316,7 +316,7 @@ You'll see the following components:
 . Implementation of the _logic_ layer.
 . Implementation of the _rest service_.
 
-*Visitor Component API (without Relations)*
+*Owner Component API (without Relations)*
 
 image::images/devon4j/5.Layers/jumpthequeue_structure_api.png[JumpTheQueue API Structure, 350]
 
@@ -328,7 +328,7 @@ image::images/devon4j/5.Layers/jumpthequeue_structure_api.png[JumpTheQueue API S
 . Definition of the _logic_ layer.
 . Definition of the _rest service_ of the component.
 
-The _queue_ component will have a similar structure. The _access code_ component will also have a similar structure -- with minor differences -- since it has some relations with visitor and queue.
+The _queue_ component will have a similar structure. The _access code_ component will also have a similar structure -- with minor differences -- since it has some relations with owner and queue.
 
 *Access Code Component Core (with Relations)*
 
@@ -349,7 +349,7 @@ So, as you can see, our components have all the layers defined and implemented f
 
 By using _CobiGen_ we have created a complete and functional _devon4j_ application without the necessity of any manual implementation (except for more complex entities which will be explained to the next chapter).
 
-Now we'll run the application and try to use the REST service to save a new visitor:
+Now we'll run the application and try to use the REST service to save a new owner:
 
 === JumpTheQueue Running
 As already mentioned, in this tutorial we will be using https://www.getpostman.com/[Postman] to test our API.
@@ -362,7 +362,7 @@ If you remember, we added some xref:devon4j-components#mock-data[mock data] prev
 Select the service *GET* and send: +
 `http://localhost:8081/jumpthequeue/services/rest/ownermanagement/v1/owner/0/`
 
-We hope to obtain the data of the visitor with id `0`.
+We hope to obtain the data of the owner with id `0`.
 Instead we get a response containing the login form:
 
 image::images/devon4j/5.Layers/jumpthequeue_simpleGet1.png[JumpTheQueue Simple GET Request 1]
@@ -396,7 +396,7 @@ Finally in the file `/jtqj-core/src/main/resources/application.properties` set `
 security.cors.enabled=true
 ----
 
-Now we run the app again and send the same GET request. We should now be able to obtain the data of our visitor:
+Now we run the app again and send the same GET request. We should now be able to obtain the data of our owner:
 
 image::images/devon4j/5.Layers/jumpthequeue_simpeGet2.png[JumpTheQueue Simple GET Request 2]
 
@@ -407,9 +407,9 @@ We are going to use the following service defined in `ownermanagement/service/ap
 
 [source,java]
 ----
-	@Path("/visitor/search")
+	@Path("/owner/search")
 	@POST
-	public Page<VisitorEto> findVisitors(VisitorSearchCriteriaTo searchCriteriaTo);
+	public Page<OwnerEto> findOwners(OwnerSearchCriteriaTo searchCriteriaTo);
 ----
 
 The service definition states, that we will need to provide a _Search Criteria Transfer Object_. This object will work as a filter for the search, as you can see in `ownermanagement/dataaccess/api/repo/OwnerRepository.java` in the `findByCriteria` method.
@@ -458,13 +458,13 @@ If we want to filter the results, we can define a _criteria_ object in the body.
 }
 ----
 
-This will filter the results to find only visitors with username `test1@mail.com`. If we repeat the request now, the result will be this:
+This will filter the results to find only owners with username `adcenter`. If we repeat the request now, the result will be this:
 
 image::images/devon4j/5.Layers/jumpthequeue_paginated2.png[JumpTheQueue Paginated Response 2]
 
 We could customize this filter by editing the `ownermanagement/logic/impl/usecase/UcFindOwnerImpl.java` class.
 
-==== Saving a Visitor
+==== Saving an Owner
 To meet the requirements of the xref:jump-the-queue-design#user-story-register[User Story: Register], we need to register an _owner_ and return an _access code_.
 
 By default _CobiGen_ has generated the _Read_ operation in the _UcFindEntityImpl_ for us, as well as the rest of the _CRUD_ operations in _UcManageEntityImpl_. So we are already able to _create_, _read_, _update_ and _delete_ owners in our database, without any extra implementation required.
@@ -476,7 +476,7 @@ To delegate _Spring_ to manage _transactions_, we only have to add the `@Transac
 @Named
 @Validated
 @Transactional
-public class UcManageVisitorImpl extends AbstractVisitorUc implements UcManageVisitor {
+public class UcManageOwnerImpl extends AbstractOwnerUc implements UcManageOwner {
   ...
 }
 ----

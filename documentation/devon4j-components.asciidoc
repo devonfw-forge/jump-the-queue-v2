@@ -67,7 +67,7 @@ We are now going to create our first app components. Our example application nee
 * register a user (returning an access code)
 * show registered queue members
 
-To accomplish this we are going to work with three entities; _Visitor_, _Queue_ and _AccessCode_:
+To accomplish this we are going to work with three entities; _Owner_, _Queue_ and _AccessCode_:
 
 image::images/devon4j/4.Components/jtq_entities.png[JumpTheQueue Entities, 750]
 
@@ -112,11 +112,11 @@ The components will be defined as follows:
 
 In addition, we will have to represent two relationships:
 
-  1. The https://en.wikipedia.org/wiki/One-to-one_(data_model)[one to one] relation between _Visitor_ and _Access Code_.
+  1. The https://en.wikipedia.org/wiki/One-to-one_(data_model)[one to one] relation between _Owner_ and _Access Code_.
 
   2. The https://en.wikipedia.org/wiki/One-to-many_(data_model)[one to many] relation between _Daily Queue_ and _Access Code_.
 
-Now is the moment to decide about the components of our app. The low complexity of the functionality would allow us to create only one component for managing all entities. In order to clarify the example we are going to create three managing components however; one for _Visitor_, one for _Access Code_ and one for _Daily Queue_.
+Now is the moment to decide about the components of our app. The low complexity of the functionality would allow us to create only one component for managing all entities. In order to clarify the example we are going to create three managing components however; one for _Owner_, one for _Access Code_ and one for _Daily Queue_.
 
 [NOTE]
 ====
@@ -186,7 +186,7 @@ create table Queue(
 * _id_: The ID of each queue.
 * _modificationCounter_: Used internally by https://en.wikipedia.org/wiki/Java_Persistence_API[JPA] to take care of https://en.wikipedia.org/wiki/Optimistic_concurrency_control[optimistic locking] for us.
 * _createdDate_: Date when the queue was created.
-* _minAttentionTime_: Minimum time required to attend a visitor, set by default.
+* _minAttentionTime_: Minimum time required to attend an owner, set by default.
 * _started_: Denotes wether the queue has satarted
 
 ==== _Access Code_ Table
