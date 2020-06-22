@@ -1,0 +1,461 @@
+:toc: macro
+toc::[]
+:idprefix:
+:idseparator: -
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= devon4j adding Custom Functionality
+In the xref:devon4j-layers[previous chapter] we have seen that, using _CobiGen_, we can generate all the structure and functionality of a _devon4j_ component in a few clicks.
+
+In this chapter we are going to show how to add custom functionalities to our projects, that are out of the scope of code, that _CobiGen_ is able to generate.
+
+== Return the Access Code
+The _JumpTheQueue_ design defines a xref:jump-the-queue-design#user-story-register[User Story] in which an owner can register into an event and obtain an access code to avoid a queue.
+
+In our _standard_ implementation of the _JumpTheQueue_ app we have used _CobiGen_ to generate the components, so we have a default implementation of the services. Since the _AccessCode_ component is more complex and requires the use of _CTOs_, we need to create our own _usecasemanage_ and the methods _save_ and _delete_.
+
+
+. Modify the corresponding `usecase` interface, adding the methods.
+. Implement the methods in the `usecaseimpl`.
+. Modify the management implementation `managementimpl`.
+
+=== Creating the usecasemanage for the AccessCode
+
+==== Adding method to the AccessCode _usecasefind_
+Before creating the usecasemanage, a method needs to be added to the usecasefind, that will recover our `AccessCodeEto`. In `jtqj-api`, inside the package `accesscodemanagement/logic/api/usecase/`, the file `UcFindAccessCode` is going to be modified, adding the new method to the interface:
+
+[source,java]
+----
+...
+
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
+
+...
+
+public interface UcFindAccessCode {
+
+  ...
+
+  /**
+   * Returns a paginated list of AccessCodeEto matching the search criteria.
+   *
+   * @param criteria the {@link AccessCodeSearchCriteriaTo}.
+   * @return the {@link List} of matching {@link AccessCodeEto}s.
+   */
+  Page<AccessCodeEto> findAccessCodeEtos(AccessCodeSearchCriteriaTo criteria);
+
+}
+----
+
+Once that is finished, we will see that an error is going to appear in `UcFindAccessCodeImpl` and `AccesscodemanagementImpl`. The second error will be solved in later steps. To solve the first error, in `jtqj-core` the `accesscodemanagement/logic/impl/usecase/UcFindAccessCodeImpl` class needs to implement another method:
+
+[source,java]
+----
+...
+
+public class UcFindAccessCodeImpl extends AbstractAccessCodeUc implements UcFindAccessCode {
+
+  ...
+
+  @Override
+  public Page<AccessCodeEto> findAccessCodeEtos(AccessCodeSearchCriteriaTo criteria) {
+
+    Page<AccessCodeEntity> accessCodes = getAccessCodeRepository().findByCriteria(criteria);
+
+    return mapPaginatedEntityList(accessCodes, AccessCodeEto.class);
+  }
+
+}
+----
+
+This method uses an `AcessCodeSearchCriteriaTo` to find a page of entities -- `AccessCodeEntity` -- using the repository. After that, it changes the mapping of the list from `AccessCodeEntity` to `AccessCodeEto`. 
+
+==== Creating the _usecasemanage_
+In `jtqj-api`, inside the package `accesscodemanagement/logic/api/usecase/`, we are going to create a new interface called `UcManageAccessCode`, where we will define the save and delete methods:
+
+[source,java]
+----
+...
+
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
+
+public interface UcManageAccessCode {
+
+  /**
+   * Deletes an accessCode from the database by its ID 'accessCodeId'. Decreases the count of customers of the queue
+   * assigned to the access code by one.
+   *
+   * @param queueId Id of the queue to delete
+   */
+  boolean deleteAccessCode(long accessCodeId);
+
+  /**
+   * Saves a queue and stores it in the database. Increases the count of customers of the queue assigned to the access
+   * code by one.
+   *
+   * @param queue the {@link AccessCodeEto} to create.
+   * @return the new {@link AccessCodeEto} that has been saved with ID and version.
+   */
+  AccessCodeEto saveAccessCode(AccessCodeEto accessCodeEto);
+
+}
+----
+
+Then `jtqj-core`, inside the package `accesscodemanagement/logic/impl/usecase`, we are going to create a class called `UcManageAccessCodeImpl`, implementing the definition we just made and extending `AbstractAccessCodeUc`. This will allow us to have access to the repository.
+
+Also, here is the part where we will use the methods that we created in the `Queue` component:
+
+[source,java]
+----
+...
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import com.devonfw.application.jtqj.accesscodemanagement.dataaccess.api.AccessCodeEntity;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.base.usecase.AbstractAccessCodeUc;
+import com.devonfw.application.jtqj.queuemanagement.dataaccess.api.QueueEntity;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.Queuemanagement;
+import com.devonfw.application.jtqj.queuemanagement.logic.api.to.QueueEto;
+import com.devonfw.application.jtqj.queuemanagement.logic.impl.usecase.UcManageQueueImpl;
+
+@Named
+@Validated
+@Transactional
+public class UcManageAccessCodeImpl extends AbstractAccessCodeUc implements UcManageAccessCode {
+
+  @Inject
+  private Queuemanagement queuemanagement;
+
+  @Inject
+  private Accesscodemanagement accesscodemanagement;
+
+  /** Logger instance. */
+  private static final Logger LOG = LoggerFactory.getLogger(UcManageQueueImpl.class);
+
+  @Override
+  public void deleteAccessCode(long accessCodeId) {
+
+    // we get the queueId using the AccessCodeRepository
+    long queueId = getAccessCodeRepository().find(accessCodeId).getQueueId();
+
+    /**
+     * Using the method getQueuemanagement() gives access to the methods that were created earlier in the usecasemanage
+     * (inside the queue component). This is done so each component takes care of its own modifications.
+     */
+    this.queuemanagement.decreaseQueueCustomer(queueId);
+
+    LOG.debug("The queue with id '{}' has decreased its customers.", queueId);
+
+    // then we delete the accesscode
+    getAccessCodeRepository().deleteById(accessCodeId);
+    LOG.debug("The accesscode with id '{}' has been deleted.", accessCodeId);
+
+  }
+
+  @Override
+  public AccessCodeEto saveAccessCode(AccessCodeEto accessCodeEto) {
+
+    // make sure the object is not null
+    Objects.requireNonNull(accessCodeEto, "UcManageAccessImpl accessCode null");
+
+    AccessCodeEntity accessCodeEntity = getBeanMapper().map(accessCodeEto, AccessCodeEntity.class);
+
+    long queueEntityId = accessCodeEntity.getQueueId();
+
+    AccessCodeSearchCriteriaTo accessCodeSearchCriteriaTo = new AccessCodeSearchCriteriaTo();
+    accessCodeSearchCriteriaTo.setQueueId(queueEntityId);
+    Pageable pageable = PageRequest.of(0, 1000);
+    accessCodeSearchCriteriaTo.setPageable(pageable);
+
+    /**
+     * Calling the parent with the method getAccesscodemanagement() we use the method findAccessCodeEtos() that will
+     * call the implementation of the method inside (UcFindAccessCodeImpl) through the interface. This allows us to use
+     * the {@link UcFindAccessCodeImpl}.
+     */
+    List<AccessCodeEto> accessCodeEtosInQueue = getAccesscodemanagement().findAccessCodeEtos(accessCodeSearchCriteriaTo)
+        .getContent();
+
+    // if there are no ETOs, we set the ticket to the first code
+    // else we get the digit of the last ticket in the list and generate a new code for the ticket
+    if (accessCodeEtosInQueue.isEmpty()) {
+      accessCodeEntity.setTicketNumber("Q000");
+    } else {
+      AccessCodeEto lastAccessCode = accessCodeEtosInQueue.get(accessCodeEtosInQueue.size() - 1);
+      int lastTicketDigit = Integer.parseInt(lastAccessCode.getTicketNumber().substring(1));
+      accessCodeEntity.setTicketNumber(generateTicketCode(lastTicketDigit));
+    }
+
+    // set the creation time, startTime and endTime
+    accessCodeEntity.setCreationTime(Timestamp.from(Instant.now()));
+    accessCodeEntity.setStartTime(null);
+    accessCodeEntity.setEndTime(null);
+
+    // save the AccessCode
+    AccessCodeEntity accessCodeEntitySaved = getAccessCodeRepository().save(accessCodeEntity);
+    LOG.debug("The accesscode with id '{}' has been saved.", accessCodeEntitySaved.getId());
+
+    /**
+     * Using the method getQueuemanagement() gives access to the methods that were created earlier in the usecasemanage
+     * (inside the queue component). This is done so each component takes care of its own modifications.
+     */
+    getQueuemanagement().increaseQueueCustomer(accessCodeEntitySaved.getQueueId());
+
+    LOG.debug("The queue with id '{}' has increased its customers.", accessCodeEntitySaved.getQueueId());
+
+    return getBeanMapper().map(accessCodeEntitySaved, AccessCodeEto.class);
+  }
+
+  /**
+   * Generates a new ticked code using the ticket digit of the last codeaccess created.
+   *
+   * @param lastTicketDigit the int of the last codeaccess created.
+   * @return the String with the new ticket code (example: 'Q005').
+   */
+  public String generateTicketCode(int lastTicketDigit) {
+
+    int newTicketDigit = lastTicketDigit + 1;
+    String newTicketCode = "";
+    if (newTicketDigit == 1000) {
+      newTicketCode = "Q000";
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(newTicketDigit);
+      while (stringBuilder.length() < 3) {
+        stringBuilder.insert(0, "0");
+      }
+      stringBuilder.insert(0, "Q");
+      newTicketCode = stringBuilder.toString();
+    }
+    return newTicketCode;
+  }
+
+  public Queuemanagement getQueuemanagement() {
+
+    return this.queuemanagement;
+  }
+
+  public Accesscodemanagement getAccesscodemanagement() {
+
+    return this.accesscodemanagement;
+  }
+
+}
+----
+
+Taking a closer look at the code, we can see that, in order to use the methods from the `UcFindAccessCodeImpl`, we need to use the parent (`Accesscodemanagement`) instead of the class directly. Also, following the `devon4j` structure, each component needs to take care of its own. In this case, by using the method `getQueuemanagement()`, we get access to the `Queuemanagement` injection that will allow the use of the methods we created earlier in the use cases in the queue component.
+
+=== Adding to the Logic
+Inside `jtqj-api`, in the class `accesscodemanagement/logic/api/Accesscodemanagement` we are going to extend the `UcManageAccessCode` that we just defined:
+
+[source,java]
+----
+...
+
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
+
+/**
+ * Interface for Accesscodemanagement component.
+ */
+public interface Accesscodemanagement extends UcFindAccessCode, UcManageAccessCode {
+
+}
+----
+
+After that, in `jtqj-core`, in the class `accesscodemanagement/logic/impl/AccesscodemanagementImpl`, we will see that an error has appeared because the methods
+from the extended interfaces are missing. We add the unimplemented methods and inject the `usecasemanage` solving the error:
+
+[source,java]
+----
+...
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.springframework.data.domain.Page;
+
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.Accesscodemanagement;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeCto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeEto;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.to.AccessCodeSearchCriteriaTo;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcFindAccessCode;
+import com.devonfw.application.jtqj.accesscodemanagement.logic.api.usecase.UcManageAccessCode;
+import com.devonfw.application.jtqj.general.logic.base.AbstractComponentFacade;
+
+/**
+ * Implementation of component interface of Accesscodemanagement.
+ */
+@Named
+public class AccesscodemanagementImpl extends AbstractComponentFacade implements Accesscodemanagement {
+
+  @Inject
+  private UcFindAccessCode ucFindAccessCode;
+
+  @Inject
+  private UcManageAccessCode ucManageAccessCode;
+
+  @Override
+  public AccessCodeCto findAccessCodeCto(long id) {
+
+    return this.ucFindAccessCode.findAccessCodeCto(id);
+  }
+
+  @Override
+  public Page<AccessCodeCto> findAccessCodeCtos(AccessCodeSearchCriteriaTo criteria) {
+
+    return this.ucFindAccessCode.findAccessCodeCtos(criteria);
+  }
+
+  @Override
+  public void deleteAccessCode(long accessCodeId) {
+
+    this.ucManageAccessCode.deleteAccessCode(accessCodeId);
+  }
+
+  @Override
+  public AccessCodeEto saveAccessCode(AccessCodeEto accessCodeEto) {
+
+    return this.ucManageAccessCode.saveAccessCode(accessCodeEto);
+  }
+
+  @Override
+  public Page<AccessCodeEto> findAccessCodeEtos(AccessCodeSearchCriteriaTo criteria) {
+
+    return this.ucFindAccessCode.findAccessCodeEtos(criteria);
+  }
+
+}
+----
+
+=== Adding to the Service
+To add the new service, we need to add its definition to the `jtqj-api` in `accesscodemanagement/service/api/rest/AccesscodemanagementRestService.java`. We are going to create a new `/accessCode` REST resource bound to three methods, one called _findAccessCodeEtos_, another one called _saveAccessCode_ and yet another one called _deleteAccessCode_.
+
+[source,java]
+----
+...
+
+public interface AccesscodemanagementRestService {
+
+  ...
+
+  /**
+   * Delegates to {@link Accesscodemanagement#findAccessCodeEtos}.
+   *
+   * @param searchCriteriaTo the pagination and search criteria to be used for finding accesscodes.
+   * @return the {@link Page list} of matching {@link AccessCodeEto}s.
+   */
+  @POST
+  @Path("/accesscode/search")
+  public Page<AccessCodeEto> findAccessCodeEtos(AccessCodeSearchCriteriaTo searchCriteriaTo);
+
+  /**
+   * Delegates to {@link Accesscodemanagement#saveAccessCode}.
+   *
+   * @param accessCodeEto queue the {@link AccessCodeEto} to be saved.
+   * @return the recently created {@link AccessCodeEto}.
+   */
+  @POST
+  @Path("/accesscode/")
+  public AccessCodeEto saveAccessCode(AccessCodeEto accessCodeEto);
+
+  /**
+   * Delegates to {@link Accesscodemanagement#deleteAccessCode}.
+   *
+   * @param id of the {@link AccessCodeEto} to be deleted.
+   */
+  @DELETE
+  @Path("/accesscode/{id}/")
+  public void deleteAccessCode(@PathParam("id") long id);
+
+}
+----
+
+Then we need to implement the new methods in the `accesscodemanagement/service/impl/rest/AccesscodemanagementRestServiceImpl.java` class:
+
+[source,java]
+----
+...
+
+public class AccesscodemanagementRestServiceImpl implements AccesscodemanagementRestService {
+
+  ...
+
+  @Override
+  public AccessCodeEto saveAccessCode(AccessCodeEto accessCodeEto) {
+
+    return this.accesscodemanagement.saveAccessCode(accessCodeEto);
+  }
+
+  @Override
+  public void deleteAccessCode(long id) {
+
+    this.accesscodemanagement.deleteAccessCode(id);
+  }
+
+  @Override
+  public Page<AccessCodeEto> findAccessCodeEtos(AccessCodeSearchCriteriaTo searchCriteriaTo) {
+
+    return this.accesscodemanagement.findAccessCodeEtos(searchCriteriaTo);
+  }
+
+}
+----
+
+=== Testing the Changes
+Now run the app again via Eclipse and use Postman to call the new save service via *POST*: +
+`http://localhost:8081/jumpthequeue/services/rest/accesscodemanagement/v1/accesscode/`
+
+In the body, provide an AccessCode object with the following required parameters:
+
+//TODO: This fails due to an SQL Error: 23506
+
+[source,json]
+----
+{
+  "queueId" : "1",
+  "visitorId" : "1000000"
+}
+----
+
+The result should be something similar to this:
+
+image::images/devon4j/6.Customizations/jumpthequeue_accesscode.png[JumpTheQueue AccessCode]
+
+In order to know, if the new codeaccess has been succesfully created, we can search all the CTOs, like we did in the previous steps. The new accesscode should be on the bottom:
+
+image::images/devon4j/6.Customizations/jumpthequeue_listwithcode.png[JumpTheQueue List with Code]
+
+To test the delete, you can send a *DELETE* to this URL:
+`http://localhost:8081/jumpthequeue/services/rest/accesscodemanagement/v1/accesscode/{id}`
+Pass the _AccessCode_ ID of the new entry, which can be found in the returned result of the save or the search operation.
+
+In this chapter we learned, how easy it is to extend a _devon4j_ application. With only a few steps you can add new services to your backend, to fit the functional requirements of your project, or edit services to adapt the default implementation to your needs.
+
+In the next chapter we will show how to add validations for the data, that we receive from the client.
+
+'''
+*Next Chapter*: link:devon4j-validations.asciidoc[Validations in devon4j]

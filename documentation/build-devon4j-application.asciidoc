@@ -132,8 +132,8 @@ The backend is now accessible via http://localhost:8081/jumpthequeue[localhost:8
 You can view the exposed services by logging in with these credentials:
 
 ----
-Username:   waiter
-Password:   waiter
+Username:   admin
+Password:   admin
 ----
 
 image::images/devon4j/3.BuildYourOwn/rest_services.png[RESTful Services, 550]
