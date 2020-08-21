@@ -28,7 +28,14 @@ export class LoginService {
       password,
       pageable: {
         pageNumber: 0,
-        pageSize: 1
+        pageSize: 1,
+        sort: [{
+          "direction": "ASC",
+          "property": "username",
+          "ignoreCase": false,
+          "nullHandling": "NATIVE",
+          "ascending": true
+        }]
       }
     };
 

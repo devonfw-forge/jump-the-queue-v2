@@ -74,8 +74,8 @@
 
     <!-- JPA 2.1 API -->
     <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.1-api</artifactId>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
     </dependency>
 
     <!-- Hibernate EntityManager for JPA (implementation) -->
@@ -134,8 +134,8 @@
 
     <!-- CXF for REST and Webservices -->
     <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-rs-service-description</artifactId>
+      <groupId>com.devonfw.java.starters</groupId>
+      <artifactId>devon4j-starter-cxf-server-rest</artifactId>
     </dependency>
 
     <!-- Monitoring features for spring -->
@@ -155,7 +155,7 @@
       <groupId>cglib</groupId>
       <artifactId>cglib</artifactId>
     </dependency>
-    
+
     <!-- Enable JSON logging for easy integration with xPaaS and ELK/Graylog/Splunk/etc. -->
     <dependency>
       <groupId>net.logstash.logback</groupId>
