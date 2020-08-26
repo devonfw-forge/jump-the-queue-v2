@@ -18,7 +18,7 @@ New Features:
 * Visitor
   * http://localhost:4200/my-code
 
-* CXF Endpoint:
+* CXF Endpoint
   * http://localhost:8081
 
 The app uses localstorage to keep track of visitor codes. In order to simulate several visitors open a normal browser window and an incognito browser window!
