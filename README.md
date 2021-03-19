@@ -1,5 +1,8 @@
 # jump-the-queue-v2
 
+> :warning: **Archived! This work is discontinued. Please find the latest version back in the original repository https://github.com/devonfw/jump-the-queue**
+
+
 New jump the queue version.
 
 New Features:
